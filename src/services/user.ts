@@ -1,9 +1,9 @@
-import request from '@/utils/request';
-import apis from '@/utils/apis';
 import type { SignInFormData, SignUpFormData } from '@/components';
-import { md5Object } from '@/utils';
-import type { Service } from './index';
 import type { User } from '@/types/user';
+import { md5Object } from '@/utils';
+import apis from '@/utils/apis';
+import request from '@/utils/request';
+import type { Service } from './index';
 
 export const UserService: Service = {
   // 登录
@@ -11,9 +11,6 @@ export const UserService: Service = {
     const token = await request<string>(
       apis.signIn,
       md5Object(signUpFormData, ['password']),
-      {
-        showSuccessMessage: true,
-      },
     );
     localStorage.setItem('accessToken', token);
     return token;
@@ -25,9 +22,6 @@ export const UserService: Service = {
     await request<boolean>(
       apis.signUp,
       md5Object(signUpFormDataWithoutCheckPassword, ['password']),
-      {
-        showSuccessMessage: true,
-      },
     );
     return true;
   },

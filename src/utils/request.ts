@@ -1,7 +1,7 @@
-import type { Api } from './apis';
-import { request as baseRequest, getDvaApp } from 'umi';
-import type { RequestOptionsInit } from 'umi-request';
 import { message, notification } from 'antd';
+import { getDvaApp, request as baseRequest } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
+import type { Api } from './apis';
 
 interface ResponseBody {
   code: number;
@@ -14,7 +14,7 @@ enum ShowType {
   byMessage = 1,
   byNotification = 2,
 }
-interface ResponseOptions {
+export interface ResponseOptions {
   showSuccessMessage?: boolean;
   showErrorMessage?: boolean;
   showType?: ShowType;
@@ -100,7 +100,7 @@ export const request = async <T = any>(
       throw new Error('网络错误，请稍后重试或联系管理员。');
     });
     const responseData = await responseInterceptors(response);
-    if (showSuccessMessage) {
+    if (showSuccessMessage && response.message) {
       switch (showType) {
         case ShowType.byMessage: {
           message.success(response.message);

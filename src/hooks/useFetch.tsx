@@ -1,14 +1,14 @@
 import type { Api } from '@/utils/apis';
+import type { ResponseOptions } from '@/utils/request';
 import request from '@/utils/request';
 import { useCallback, useState } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 
 export const useFetch = <T = any,>(
-  api?: Api,
-  params?: Record<string, any> | FormData | undefined,
-  defaultValues?: T,
-): [T | undefined, boolean] => {
-  const [data, setData] = useState<T | undefined>(defaultValues);
+  api: Api | undefined = undefined,
+  params: Record<string, any> | FormData | undefined = {},
+  callback: (resData: T) => any | undefined = () => {},
+  requestOptions: ResponseOptions = {},
+): [(newParams: any) => void, boolean] => {
   const [loading, setLoading] = useState<boolean>(false);
   const handleRequest = useCallback(
     async (newParams: any = {}) => {
@@ -17,24 +17,17 @@ export const useFetch = <T = any,>(
       }
       setLoading(true);
       try {
-        const resData = await request(api, { ...params, ...newParams });
-        setData(resData);
+        const resData = await request(api, newParams || params, requestOptions);
+        callback(resData);
         setLoading(false);
       } catch (error) {
-        setData(undefined);
         setLoading(false);
       }
     },
-    [api, params],
+    [api, callback, params],
   );
 
-  useDeepCompareEffect(() => {
-    if (api) {
-      handleRequest();
-    }
-  }, [api, params]);
-
-  return [data, loading];
+  return [handleRequest, loading];
 };
 
 export default useFetch;

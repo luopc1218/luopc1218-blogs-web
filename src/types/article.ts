@@ -10,9 +10,10 @@ export interface Article {
   viewCount: number;
   collectCount: number;
   likeCount: number;
-  unLikeCount: number;
+  unlikeCount: number;
   commentCount: number;
   createTime: string;
   editTime: string;
   deleteTime: string;
+  likeOrUnlike: number;
 }

@@ -8,7 +8,7 @@ export const IndexPage = () => {
 
   return (
     <div className={`page ${styles.indexPage}`}>
-      <ArticleList className="module" />
+      <ArticleList />
     </div>
   );
 };

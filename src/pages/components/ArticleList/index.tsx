@@ -1,10 +1,9 @@
 import { ColumnSpace, Iconfont, LoadingContainer } from '@/components';
-import { useFetch, usePagination } from '@/hooks';
-import { Article } from '@/types/article';
+import { useFetchData, usePagination } from '@/hooks';
 import type { ListResponse } from '@/types/response';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
-import { Card, Divider, Space } from 'antd';
+import { Card, Space } from 'antd';
 import type { CSSProperties } from 'react';
 import { useMemo } from 'react';
 import { Link } from 'umi';
@@ -26,7 +25,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({
     () => ({ ...pagination, words }),
     [pagination, words],
   );
-  const [articles, getArticlesLoading] = useFetch<ListResponse<Article>>(
+  const [articles, getArticlesLoading] = useFetchData<ListResponse>(
     apis.getArticleList,
     queryParams,
   );
@@ -38,7 +37,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({
       className={`${className} ${styles.articleList}`}
       style={style}
     >
-      <ColumnSpace split={<Divider />}>
+      <ColumnSpace>
         {articles?.list.map((item) => (
           <Link key={item.id} to={`/article?id=${item.id}`}>
             <Card className={styles.articleItem} hoverable>
@@ -56,12 +55,12 @@ export const ArticleList: React.FC<ArticleListProps> = ({
                     <Iconfont type="icon-good" />
                     {item.likeCount}
                   </div>
-                  <div className={styles.unLikeCount}>
+                  <div className={styles.unlikeCount}>
                     <Iconfont type="icon-bad" />
-                    {item.unLikeCount}
+                    {item.unlikeCount}
                   </div>
                   <div className={styles.createTime}>
-                    {formatTime(item.createTime)}
+                    {formatTime(item.finalTime)}
                   </div>
                 </Space>
               </ColumnSpace>
