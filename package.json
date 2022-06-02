@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "umi dev",
+    "build": "git pull && npm i -prod && umi build",
+    "docker:build": "docker build -t luopc1218blogs:latest ."
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,json}": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "dependencies": {
+    "@ant-design/pro-layout": "^6.38.0",
+    "@umijs/fabric": "^2.10.2",
+    "@umijs/preset-react": "1.x",
+    "@umijs/test": "^3.5.23",
+    "antd": "^4.20.2",
+    "js-md5": "^0.7.3",
+    "lodash": "^4.17.21",
+    "react": "17.x",
+    "react-dom": "17.x",
+    "umi": "^3.5.23",
+    "use-deep-compare-effect": "^1.8.1"
+  },
+  "devDependencies": {
+    "@types/js-md5": "^0.4.3",
+    "@types/lodash": "^4.14.182",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "lint-staged": "^12.4.1",
+    "prettier": "^2.6.2",
+    "typescript": "^4.6.4",
+    "yorkie": "^2.0.0"
+  },
+  "homepage": "."
+}

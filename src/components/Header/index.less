@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  align-items: center;
+  line-height: normal;
+  background: #fff;
+
+  .logo {
+    flex: 1;
+    color: @primary-color;
+    font-weight: bolder;
+    font-size: 20px;
+    font-family: '华文行楷', ui-monospace;
+  }
+
+  .navigator {
+    display: flex;
+    justify-content: center;
+    padding: 0 1rem;
+  }
+
+  .user {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    .userInfoBtn {
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
+}
