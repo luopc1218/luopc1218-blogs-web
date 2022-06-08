@@ -17,16 +17,17 @@
     ]
   },
   "dependencies": {
-    "@ant-design/pro-layout": "^6.38.0",
+    "@ant-design/pro-layout": "^6.38.8",
     "@umijs/fabric": "^2.10.2",
     "@umijs/preset-react": "1.x",
-    "@umijs/test": "^3.5.23",
+    "@umijs/test": "^3.5.25",
     "antd": "^4.20.2",
     "js-md5": "^0.7.3",
     "lodash": "^4.17.21",
     "react": "17.x",
     "react-dom": "17.x",
-    "umi": "^3.5.23",
+    "react-quill": "^2.0.0-beta.4",
+    "umi": "^3.5.25",
     "use-deep-compare-effect": "^1.8.1"
   },
   "devDependencies": {
@@ -36,7 +37,7 @@
     "@types/react-dom": "^17.0.0",
     "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
-    "typescript": "^4.6.4",
+    "typescript": "^4.7.3",
     "yorkie": "^2.0.0"
   },
   "homepage": "."

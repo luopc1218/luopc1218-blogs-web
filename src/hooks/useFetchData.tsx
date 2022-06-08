@@ -5,33 +5,28 @@ import { useCallback, useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 export const useFetchData = <T = any,>(
-  api?: Api,
-  params?: Record<string, any> | FormData | undefined,
+  api?: Api | undefined,
+  params?: Record<string, any> | FormData,
   defaultValues?: T,
   requestOptions: ResponseOptions = {},
 ): [T | undefined, boolean, (newParams?: any) => any] => {
   const [data, setData] = useState<T | undefined>(defaultValues);
   const [loading, setLoading] = useState<boolean>(false);
   const handleRequest = useCallback(
-    async (newParams: any = {}) => {
+    async (newParams: any = undefined) => {
       if (!api) {
         return Promise.reject();
       }
       setLoading(true);
       try {
-        const resData = await request(
-          api,
-          { ...params, ...newParams },
-          requestOptions,
-        );
+        const resData = await request(api, newParams || params, requestOptions);
         setData(resData);
         setLoading(false);
       } catch (error) {
-        setData(undefined);
         setLoading(false);
       }
     },
-    [api, params],
+    [api, params, requestOptions],
   );
 
   useDeepCompareEffect(() => {

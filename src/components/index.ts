@@ -11,6 +11,7 @@ export * from './Header';
 export * from './Iconfont';
 export * from './LoadingContainer';
 export * from './RemoteTable';
+export * from './RichTextEditor';
 export * from './Sider';
 export * from './Upload';
 export * from './UploadMask';

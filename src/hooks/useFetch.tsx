@@ -6,17 +6,19 @@ import { useCallback, useState } from 'react';
 export const useFetch = <T = any,>(
   api: Api | undefined = undefined,
   params: Record<string, any> | FormData | undefined = {},
-  callback: (resData: T) => any | undefined = () => {},
+  callback: (resData: T) => any = () => {},
   requestOptions: ResponseOptions = {},
-): [(newParams: any) => void, boolean] => {
+): [(newParams?: any) => Promise<undefined>, boolean] => {
   const [loading, setLoading] = useState<boolean>(false);
   const handleRequest = useCallback(
-    async (newParams: any = {}) => {
+    async (newParams: any = undefined) => {
       if (!api) {
         return Promise.reject();
       }
       setLoading(true);
       try {
+        console.log(newParams, params);
+
         const resData = await request(api, newParams || params, requestOptions);
         callback(resData);
         setLoading(false);
@@ -24,7 +26,7 @@ export const useFetch = <T = any,>(
         setLoading(false);
       }
     },
-    [api, callback, params],
+    [api, callback, params, requestOptions],
   );
 
   return [handleRequest, loading];

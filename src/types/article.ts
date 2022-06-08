@@ -8,12 +8,26 @@ export interface Article {
   tags: string;
   type: number;
   viewCount: number;
+  createTime: string;
+  editTime: string;
+}
+
+export interface ArticleFeedback {
   collectCount: number;
   likeCount: number;
   unlikeCount: number;
-  commentCount: number;
-  createTime: string;
-  editTime: string;
-  deleteTime: string;
-  likeOrUnlike: number;
+  likeStatus: number;
+  collectStatus: boolean;
+  id: number;
+}
+
+export interface ArticleComment {
+  id: number;
+  articleId: number;
+  from: number;
+  to: number;
+  content: string;
+  agreeCount: number;
+  disAgreeCount: number;
+  time: string;
 }

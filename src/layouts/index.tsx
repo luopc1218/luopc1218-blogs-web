@@ -1,6 +1,7 @@
 import { Breadcrumb, Footer, Header, Sider } from '@/components';
 import { Affix, ConfigProvider, Layout, Modal } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
+import 'quill/dist/quill.snow.css';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'umi';
 import styles from './index.less';

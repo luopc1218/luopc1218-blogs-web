@@ -78,14 +78,16 @@ export const request = async <T = any>(
 ): Promise<T> => {
   const {
     showErrorMessage = true,
-    showSuccessMessage = api.method === 'POST',
+    // showSuccessMessage = api.method === 'POST',
+    showSuccessMessage = false,
     showType = ShowType.byMessage,
   } = responseOptions || {};
   const accessToken: string = localStorage.getItem('accessToken') || '';
+  const authorization: string = accessToken && 'Bearer ' + accessToken;
   const requestOptions: RequestOptionsInit = {
     method: api.method,
     headers: {
-      Authorization: 'Bearer ' + accessToken,
+      Authorization: authorization,
     },
     skipErrorHandler: true,
   };

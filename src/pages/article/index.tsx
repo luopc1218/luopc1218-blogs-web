@@ -1,11 +1,12 @@
-import { ColumnSpace, Iconfont, LoadingContainer } from '@/components';
-import { useFetch, useFetchData, usePage, useUrlParams } from '@/hooks';
+import { ColumnSpace, LoadingContainer } from '@/components';
+import { useFetchData, useUrlParams } from '@/hooks';
 import type { Article } from '@/types/article';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
-import { Divider, Space } from 'antd';
-import { useCallback, useMemo } from 'react';
+import { Space } from 'antd';
+import { useMemo } from 'react';
 import { Link } from 'umi';
+import { Comments, Feedback } from './components';
 import styles from './index.less';
 
 export const ArticlePage: React.FC = () => {
@@ -16,46 +17,6 @@ export const ArticlePage: React.FC = () => {
     {
       id: articleId,
     },
-  );
-  const [articleFeedback, getArticleFeedbackLoading, getArticleFeedback] =
-    useFetchData(apis.getArticleFeedback, {
-      id: articleId,
-    });
-  usePage({
-    pagePath: [
-      {
-        title: articleInfo?.title || '加载中',
-        path: `/article?id=${articleId}`,
-      },
-    ],
-  });
-
-  const [toggleArticleLike, toggleArticleLikeLoading] = useFetch(
-    apis.toggleArticleLike,
-    {},
-    () => {
-      getArticleFeedback();
-    },
-    {
-      showSuccessMessage: false,
-    },
-  );
-
-  const handleArticleToogleLike = useCallback(
-    (type) => {
-      if (type === articleFeedback?.likeStatus) {
-        toggleArticleLike({
-          id: articleInfo?.id,
-          type: 2,
-        });
-      } else {
-        toggleArticleLike({
-          id: articleInfo?.id,
-          type,
-        });
-      }
-    },
-    [articleInfo?.id, articleFeedback?.likeStatus, toggleArticleLike],
   );
 
   return (
@@ -83,51 +44,9 @@ export const ArticlePage: React.FC = () => {
             }}
           />
 
-          <Divider style={{ marginBottom: 0 }} />
-          <LoadingContainer
-            loading={toggleArticleLikeLoading || getArticleFeedbackLoading}
-            className={`${styles.feedback}`}
-          >
-            <Space>
-              <div className={styles.operate}>
-                <Iconfont type="icon-collection" />{' '}
-                {articleFeedback?.collectCount}
-              </div>
-              <div
-                className={styles.operate}
-                title="点赞"
-                onClick={() => handleArticleToogleLike(0)}
-              >
-                <Iconfont
-                  type={
-                    articleFeedback?.likeStatus === 0
-                      ? 'icon-good-fill'
-                      : 'icon-good'
-                  }
-                />
-                {articleFeedback?.likeCount}
-              </div>
-              <div
-                className={styles.operate}
-                title="点踩"
-                onClick={() => handleArticleToogleLike(1)}
-              >
-                <Iconfont
-                  type={
-                    articleFeedback?.likeStatus === 1
-                      ? 'icon-bad-fill'
-                      : 'icon-bad'
-                  }
-                />
-                {articleFeedback?.unlikeCount}
-              </div>
-            </Space>
-          </LoadingContainer>
+          {articleInfo && <Feedback articleInfo={articleInfo} />}
         </ColumnSpace>
-
-        <ColumnSpace className="module">
-          <div>评论</div>
-        </ColumnSpace>
+        <Comments articleId={articleId} />
       </ColumnSpace>
     </LoadingContainer>
   );
