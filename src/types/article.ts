@@ -4,6 +4,7 @@ export interface Article {
   description: string;
   authorId: number;
   authorName: string;
+  authorAvatarUrl: string;
   content: string;
   tags: string;
   type: number;
@@ -25,9 +26,12 @@ export interface ArticleComment {
   id: number;
   articleId: number;
   from: number;
+  fromName: string;
+  fromAvatarUrl: string;
   to: number;
   content: string;
-  agreeCount: number;
-  disAgreeCount: number;
+  replyCount: number;
+  likeCount: number;
+  likeCountStatus: boolean;
   time: string;
 }

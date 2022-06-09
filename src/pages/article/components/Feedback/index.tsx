@@ -3,7 +3,7 @@ import { useFetch, useFetchData, usePage } from '@/hooks';
 import type { Article, ArticleFeedback } from '@/types/article';
 import apis from '@/utils/apis';
 import { Divider, Space } from 'antd';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import styles from './index.less';
 
 export interface FeedbackProps {
@@ -28,40 +28,36 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
   const [toggleArticleLike, toggleArticleLikeLoading] = useFetch(
     apis.toggleArticleLike,
     {},
-    () => getArticleFeedback(),
+    getArticleFeedback,
     {
       showSuccessMessage: false,
     },
   );
 
-  const handleArticleToogleLike = useCallback(
-    (type) => {
-      if (type === articleFeedback?.likeStatus) {
-        toggleArticleLike({
-          id: articleInfo?.id,
-          type: 2,
-        });
-      } else {
-        toggleArticleLike({
-          id: articleInfo?.id,
-          type,
-        });
-      }
-    },
-    [articleInfo?.id, articleFeedback?.likeStatus, toggleArticleLike],
-  );
-
+  const handleArticleToogleLike = (type: number | undefined) => {
+    if (type === articleFeedback?.likeStatus) {
+      toggleArticleLike({
+        id: articleInfo?.id,
+        type: 2,
+      });
+    } else {
+      toggleArticleLike({
+        id: articleInfo?.id,
+        type,
+      });
+    }
+  };
   const [toggleArticleCollect, toggleArticleCollectLoading] = useFetch(
     apis.toggleArticleCollect,
     {
       articleId: articleId,
     },
-    () => getArticleFeedback(),
+    getArticleFeedback,
   );
 
-  const handleToggleArticleCollect = useCallback(() => {
+  const handleToggleArticleCollect = () => {
     toggleArticleCollect();
-  }, [toggleArticleCollect]);
+  };
 
   return (
     <LoadingContainer
@@ -74,7 +70,11 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
     >
       <Divider style={{ marginBottom: 10 }} />
       <Space>
-        <div className={styles.operate} onClick={handleToggleArticleCollect}>
+        <div
+          className={styles.operate}
+          onClick={handleToggleArticleCollect}
+          title="收藏"
+        >
           <Iconfont
             type={
               articleFeedback?.collectStatus

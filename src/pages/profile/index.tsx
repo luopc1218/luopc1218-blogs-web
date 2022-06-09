@@ -1,10 +1,12 @@
-import { Avatar, FormModal, UploadMask } from '@/components';
+import { Avatar, FormModal, LoadingContainer, UploadMask } from '@/components';
 import type { ChangePasswordFormData } from '@/components/FormModal';
 import { ChangePasswordForm } from '@/components/FormModal';
-import { usePage, useUrlParams } from '@/hooks';
+import { useFetch, usePage, useUrlParams } from '@/hooks';
 import type { ModelMap } from '@/models';
-import { Button, Descriptions, message, Modal, Space, Spin, Tabs } from 'antd';
-import { useCallback, useMemo } from 'react';
+import type { User } from '@/types/user';
+import apis from '@/utils/apis';
+import { Button, Descriptions, message, Modal, Space, Tabs } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 import type { UserModelState } from 'umi';
 import { useDispatch, useSelector } from 'umi';
 import styles from './index.less';
@@ -15,34 +17,56 @@ export const ProfilePage = () => {
   const userModelState: UserModelState = useSelector<ModelMap, UserModelState>(
     (state: ModelMap) => state.user,
   );
-  const isMe = useMemo(
-    () =>
+  const isMe = useMemo(() => {
+    return (
       !urlParams.userId ||
-      parseInt(urlParams.userId) === userModelState.userInfo?.id,
-    [urlParams.userId, userModelState.userInfo?.id],
+      parseInt(urlParams.userId) === userModelState.userInfo?.id
+    );
+  }, [urlParams.userId, userModelState.userInfo?.id]);
+  const [userInfo, setUserInfo] = useState<User | undefined>(undefined);
+  const [getUserInfo, getUserInfoLoading] = useFetch(
+    !isMe && apis.getUserInfo,
+    {
+      id: urlParams.userId,
+    },
+    (res) => {
+      // console.log(res);
+      setUserInfo(res);
+    },
   );
+  useEffect(() => {
+    if (isMe) {
+      setUserInfo(userModelState.userInfo);
+    } else {
+      getUserInfo();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMe, userModelState.userInfo]);
+
   const dispatch = useDispatch();
-  const userInfo = useMemo(() => userModelState.userInfo, [userModelState]);
   const loading = useMemo<boolean>(
     () =>
-      userModelState.checkSignInLoading || userModelState.getUserInfoLoading,
-    [userModelState.checkSignInLoading, userModelState.getUserInfoLoading],
+      userModelState.checkSignInLoading ||
+      userModelState.getUserInfoLoading ||
+      getUserInfoLoading,
+    [
+      getUserInfoLoading,
+      userModelState.checkSignInLoading,
+      userModelState.getUserInfoLoading,
+    ],
   );
   usePage({ pagePath: [{ path: '/profile', title: '个人信息' }] });
 
   // 监听修改头像
-  const handleChangeAvatar = useCallback<(url: string) => void>(
-    (url) => {
-      dispatch({
-        type: 'user/changeAvatar',
-        payload: url,
-      });
-    },
-    [dispatch],
-  );
+  const handleChangeAvatar = (url: string) => {
+    dispatch({
+      type: 'user/changeAvatar',
+      payload: url,
+    });
+  };
 
   // 监听修改密码
-  const handleChangePassword = useCallback(() => {
+  const handleChangePassword = () => {
     FormModal.open<ChangePasswordFormData>(
       ChangePasswordForm,
       (changePasswordFormData, reslove, reject) => {
@@ -66,20 +90,20 @@ export const ProfilePage = () => {
         });
       },
     );
-  }, [dispatch]);
+  };
 
-  const handleChangePhone = useCallback(() => {
+  const handleChangePhone = () => {
     message.error('暂不支持');
-  }, []);
+  };
 
-  const handleChangeEmail = useCallback(() => {
+  const handleChangeEmail = () => {
     message.error('暂不支持');
-  }, []);
+  };
 
   if (!userInfo) return null;
 
   return (
-    <Spin spinning={loading}>
+    <LoadingContainer loading={loading} empty={!userInfo}>
       <Space direction="vertical" className={`page ${styles.profilePage}`}>
         <div className={`module ${styles.summary}`}>
           <Space align="center">
@@ -90,11 +114,7 @@ export const ProfilePage = () => {
                   accept: 'image/*,.gif',
                 }}
               >
-                <Avatar
-                  user={userModelState.userInfo}
-                  size={128}
-                  shape="square"
-                />
+                <Avatar user={userInfo} size={128} shape="square" />
               </UploadMask>
             </Space>
             <Descriptions title={userInfo.name} className={styles.summary}>
@@ -108,8 +128,8 @@ export const ProfilePage = () => {
           </Space>
         </div>
         <div className={`module ${styles.details}`}>
-          {isMe && (
-            <Tabs defaultActiveKey="1">
+          <Tabs defaultActiveKey="1">
+            {isMe && (
               <Tabs.TabPane tab="偏好设置" key="setting">
                 <Space>
                   <Button onClick={handleChangePassword}>修改密码</Button>
@@ -117,13 +137,12 @@ export const ProfilePage = () => {
                   <Button onClick={handleChangeEmail}>修改电子邮箱</Button>
                 </Space>
               </Tabs.TabPane>
-            </Tabs>
-          )}
+            )}
+          </Tabs>
         </div>
       </Space>
-    </Spin>
+    </LoadingContainer>
   );
 };
 
 export default ProfilePage;
-

@@ -12,7 +12,7 @@ import {
   Space,
   Spin,
 } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { UserModelState } from 'umi';
 import { Link, useDispatch, useHistory, useSelector } from 'umi';
 import type { SignInFormData } from '../FormModal';
@@ -141,9 +141,9 @@ export const Header: React.FC = () => {
    * 监听搜索
    * @param string 搜索的字符
    */
-  const handleSearch = useCallback(() => {
+  const handleSearch = () => {
     history.push('/searchResult?words=' + searchWords);
-  }, [history, searchWords]);
+  };
 
   return (
     <Layout.Header className={styles.header}>

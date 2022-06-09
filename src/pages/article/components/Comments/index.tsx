@@ -1,13 +1,19 @@
-import { ColumnSpace, LoadingContainer, RichTextEditor } from '@/components';
+import {
+  ColumnSpace,
+  Iconfont,
+  LoadingContainer,
+  RichTextEditor,
+} from '@/components';
 import { useFetch, useFetchData } from '@/hooks';
 import type { ArticleComment } from '@/types/article';
 import type { ListResponse } from '@/types/response';
+import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
-import { Button, Card } from 'antd';
+import { Avatar, Badge, Button, Card, Divider, Space } from 'antd';
 import 'quill/dist/quill.snow.css';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import type { ModelMap, UserModelState } from 'umi';
-import { useSelector } from 'umi';
+import { Link, useSelector } from 'umi';
 
 import styles from './index.less';
 
@@ -44,12 +50,26 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
     },
   );
 
-  const handleSubmitComment = useCallback(() => {
+  const handleSubmitComment = () => {
     submitComment({
       articleId,
       content: inputingComment,
     });
-  }, [articleId, inputingComment, submitComment]);
+  };
+
+  const [toggleArticleCommentLike] = useFetch(
+    apis.toggleArticleCommentLike,
+    {},
+    () => {
+      getArticleCommentList();
+    },
+  );
+
+  const handleToogleArticleCommentLike = (commentId: number) => {
+    toggleArticleCommentLike({
+      commentId,
+    });
+  };
 
   return (
     <ColumnSpace className={`${styles.comments} module`}>
@@ -81,15 +101,48 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
       >
         <ColumnSpace>
           {articleCommentList?.list.map((item) => (
-            <Card hoverable key={item.id}>
+            <Card hoverable key={item.id} style={{ cursor: 'auto' }}>
               <ColumnSpace className={styles.commentItem}>
+                <div className={styles.header}>
+                  <Space>
+                    <Avatar src={item.fromAvatarUrl} />
+                    <Link to={`/profile?userId=${item.from}`}>
+                      {item.fromName}
+                    </Link>
+                  </Space>
+                  <Space
+                    align="center"
+                    split={<Divider type="vertical" style={{ margin: 0 }} />}
+                  >
+                    <Badge
+                      count={item.replyCount}
+                      className={styles.ctrl}
+                      size="small"
+                      title="回复"
+                    >
+                      <Iconfont title="回复" type="icon-phone" />
+                    </Badge>
+                    <Badge
+                      count={item.likeCount}
+                      className={styles.ctrl}
+                      size="small"
+                      title="点赞"
+                    >
+                      <Iconfont
+                        title="点赞"
+                        type={item.likeStatus ? 'icon-good-fill' : 'icon-good'}
+                        onClick={() => {
+                          handleToogleArticleCommentLike(item.id);
+                        }}
+                      />
+                    </Badge>
+                  </Space>
+                </div>
                 <div
                   className={`ql-editor ${styles.content}`}
                   dangerouslySetInnerHTML={{ __html: item.content }}
                 />
-                <div className={styles.time}>
-                  {item.time} by {item.from}
-                </div>
+                <div className={styles.time}>{formatTime(item.time)}</div>
               </ColumnSpace>
             </Card>
           ))}

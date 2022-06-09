@@ -39,10 +39,12 @@ export const ArticleList: React.FC<ArticleListProps> = ({
     >
       <ColumnSpace>
         {articles?.list.map((item) => (
-          <Link key={item.id} to={`/article?id=${item.id}`}>
-            <Card className={styles.articleItem} hoverable>
+          <div key={item.id}>
+            <Card className={styles.articleItem}>
               <ColumnSpace>
-                <div className={styles.title}>{item.title}</div>
+                <Link to={`/article?id=${item.id}`} className={styles.title}>
+                  {item.title}
+                </Link>
                 <div className={styles.description}>{item.description}</div>
                 <Space>
                   <Link
@@ -65,7 +67,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({
                 </Space>
               </ColumnSpace>
             </Card>
-          </Link>
+          </div>
         ))}
       </ColumnSpace>
     </LoadingContainer>

@@ -3,9 +3,10 @@ import { useFetchData, useUrlParams } from '@/hooks';
 import type { Article } from '@/types/article';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
-import { Space } from 'antd';
+import { Avatar, Space } from 'antd';
 import { useMemo } from 'react';
-import { Link } from 'umi';
+import type { ModelMap, UserModelState } from 'umi';
+import { Link, useSelector } from 'umi';
 import { Comments, Feedback } from './components';
 import styles from './index.less';
 
@@ -17,6 +18,14 @@ export const ArticlePage: React.FC = () => {
     {
       id: articleId,
     },
+  );
+  const userModelState: UserModelState = useSelector(
+    (state: ModelMap) => state.user,
+  );
+  // 作者模式
+  const authorMode = useMemo(
+    () => articleInfo?.authorId === userModelState.userInfo?.id,
+    [articleInfo?.authorId, userModelState.userInfo?.id],
   );
 
   return (
@@ -30,7 +39,8 @@ export const ArticlePage: React.FC = () => {
           <div className={styles.title}>{articleInfo?.title}</div>
           <div className={styles.description}>{articleInfo?.description}</div>
           <Space className={styles.time}>
-            <Link to={`/profile?id=${articleInfo?.authorId}`}>
+            <Avatar src={articleInfo?.authorAvatarUrl} />
+            <Link to={`/profile?userId=${articleInfo?.authorId}`}>
               {articleInfo?.authorName}
             </Link>
             <span>于{formatTime(articleInfo?.createTime)}创建</span>

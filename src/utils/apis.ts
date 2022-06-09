@@ -63,6 +63,10 @@ export const apis: Record<string, Api> = {
     url: '/api/article/addArticleComment',
     method: 'POST',
   },
+  toggleArticleCommentLike: {
+    url: '/api/article/toggleArticleCommentLike',
+    method: 'POST',
+  },
 };
 
 export default apis;

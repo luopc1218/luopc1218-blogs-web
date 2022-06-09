@@ -2,7 +2,7 @@ import { Breadcrumb, Footer, Header, Sider } from '@/components';
 import { Affix, ConfigProvider, Layout, Modal } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import 'quill/dist/quill.snow.css';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'umi';
 import styles from './index.less';
 
@@ -16,16 +16,12 @@ export const LayoutContainer: React.FC = ({ children }) => {
   const dispatch = useDispatch();
   const [modal, contextHolder] = Modal.useModal();
 
-  const initApp = useCallback(() => {
+  useEffect(() => {
     window.modal = modal;
     dispatch({
       type: 'user/checkSignIn',
     });
   }, [dispatch, modal]);
-
-  useEffect(() => {
-    initApp();
-  }, [initApp]);
 
   return (
     <ConfigProvider locale={zhCN}>
