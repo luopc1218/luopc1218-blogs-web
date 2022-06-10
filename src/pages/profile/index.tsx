@@ -109,6 +109,7 @@ export const ProfilePage = () => {
           <Space align="center">
             <Space direction="vertical" align="center">
               <UploadMask
+                disabled={!isMe}
                 onSuccess={handleChangeAvatar}
                 uploadOptions={{
                   accept: 'image/*,.gif',

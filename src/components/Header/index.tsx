@@ -147,9 +147,10 @@ export const Header: React.FC = () => {
 
   return (
     <Layout.Header className={styles.header}>
-      <Link to="/" className={styles.logo}>
-        Luopc1218-Blogs
-      </Link>
+      <div className={styles.logo}>
+        <Link to="/">Luopc1218-Blogs</Link>
+      </div>
+
       <div className={styles.navigator}>
         <Input.Group compact>
           <Input

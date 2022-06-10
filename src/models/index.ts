@@ -1,5 +1,5 @@
-import type {Effect, ImmerReducer} from 'umi';
-import type {UserModelState} from './user';
+import type { Effect, ImmerReducer } from 'umi';
+import type { UserModelState } from './user';
 
 export interface Model<T> {
   namespace?: string;
@@ -16,6 +16,7 @@ export interface ModelMap {
 export interface GlobalModelState {
   titlePath: { title: string; path: string }[];
   sysConfig: any;
+  theme: Record<string, string>;
 }
 
 export const globalModel: Model<GlobalModelState> = {
@@ -24,6 +25,9 @@ export const globalModel: Model<GlobalModelState> = {
     titlePath: [],
     sysConfig: {
       title: 'luopc1218blogs',
+    },
+    theme: {
+      primaryColor: 'red',
     },
   },
   reducers: {

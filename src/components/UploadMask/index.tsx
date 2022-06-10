@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import styles from './index.less';
+import { Upload } from '@/components';
 import { LoadingOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { Space } from 'antd';
-import { Upload } from '@/components';
+import { useState } from 'react';
+import styles from './index.less';
 
 interface UploadMaskProps {
   mask?: boolean;
   title?: string;
   uploadOptions?: UploadProps;
   onSuccess?: (url: string) => void;
+  disabled?: boolean;
 }
 
 export const UploadMask: React.FC<UploadMaskProps> = ({
@@ -17,9 +18,12 @@ export const UploadMask: React.FC<UploadMaskProps> = ({
   title = '点击上传',
   onSuccess,
   uploadOptions,
+  disabled = false,
   children,
 }) => {
   const [loading, setLoading] = useState(false);
+
+  if (disabled) return <div className={`${styles.uploadMask}`}>{children}</div>;
 
   return (
     <div className={`${styles.uploadMask}`}>

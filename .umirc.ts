@@ -6,15 +6,23 @@ export default defineConfig({
     type: 'none',
   },
   fastRefresh: {},
-  mfsu: {},
+  antd: {
+    disableBabelPluginImport: true,
+  },
+  mfsu: false,
   dva: {
     immer: true,
     hmr: true,
     lazyLoad: true,
   },
-  theme: {
-    '@primary-color': '#1DA57A',
+  lessLoader: {
+    // 通过globalVars在每个less文件头引入antd定义的variable.less文件，里面有less变量和css变量
+    // 相关的映射
+    globalVars: {
+      theme: 'true;@import "~antd/lib/style/themes/variable.less"',
+    },
   },
+
   proxy: {
     '/api': {
       // 标识需要进行转换的请求的url

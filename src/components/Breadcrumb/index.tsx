@@ -8,18 +8,20 @@ export const Breadcrumb = () => {
     (state: ModelMap) => state.global,
   );
   return (
-    <AntdBreadcrumb className={styles.breadcrumb}>
-      <AntdBreadcrumb.Item>
-        <Link to="/">主页</Link>
-      </AntdBreadcrumb.Item>
-      {globalModelState.titlePath.map((path) => {
-        return (
-          <AntdBreadcrumb.Item key={path.path}>
-            <Link to={path.path}>{path.title}</Link>
-          </AntdBreadcrumb.Item>
-        );
-      })}
-    </AntdBreadcrumb>
+    <div className={styles.breadcrumb}>
+      <AntdBreadcrumb>
+        <AntdBreadcrumb.Item>
+          <Link to="/">主页</Link>
+        </AntdBreadcrumb.Item>
+        {globalModelState.titlePath.map((path) => {
+          return (
+            <AntdBreadcrumb.Item key={path.path}>
+              <Link to={path.path}>{path.title}</Link>
+            </AntdBreadcrumb.Item>
+          );
+        })}
+      </AntdBreadcrumb>
+    </div>
   );
 };
 
