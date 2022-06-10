@@ -10,6 +10,7 @@ export * from './FormModal/SignInForm';
 export * from './Header';
 export * from './Iconfont';
 export * from './LoadingContainer';
+export * from './PaginationList';
 export * from './RemoteTable';
 export * from './RichTextEditor';
 export * from './Sider';

@@ -2,25 +2,36 @@
   display: flex;
   align-items: center;
   line-height: normal;
+  border-bottom: 1px solid #cecece;
 
   .logo {
     flex: 1;
-    color: @primary-color;
     font-weight: bolder;
     font-size: 20px;
     font-family: '华文行楷', ui-monospace;
+    a {
+      color: #fff;
+    }
   }
 
   .navigator {
     display: flex;
     justify-content: center;
     padding: 0 1rem;
+    .searchBtn {
+      transition: all 0.3s ease;
+      &:hover {
+        color: @primary-color;
+        cursor: pointer;
+      }
+    }
   }
 
   .user {
     display: flex;
     flex: 1;
     justify-content: flex-end;
+    color: #fff;
     .userInfoBtn {
       font-size: 20px;
       cursor: pointer;

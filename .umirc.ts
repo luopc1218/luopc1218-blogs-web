@@ -1,7 +1,7 @@
 import { defineConfig } from 'umi';
 
 export default defineConfig({
-  title: 'loading...',
+  title: false,
   nodeModulesTransform: {
     type: 'none',
   },

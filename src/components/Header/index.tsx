@@ -1,7 +1,7 @@
 import { Avatar } from '@/components';
 import type { ModelMap } from '@/models';
 import type { User } from '@/types/user';
-import { MoreOutlined } from '@ant-design/icons';
+import { MoreOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   Button,
   Dropdown,
@@ -9,10 +9,12 @@ import {
   Layout,
   Menu,
   Modal,
+  Popover,
   Space,
   Spin,
 } from 'antd';
 import { useMemo, useState } from 'react';
+import { CirclePicker } from 'react-color';
 import type { UserModelState } from 'umi';
 import { Link, useDispatch, useHistory, useSelector } from 'umi';
 import type { SignInFormData } from '../FormModal';
@@ -75,10 +77,26 @@ const HeaderUser: React.FC<HeaderUserProps> = ({
       }
     }
   };
-
   return (
     <div className={styles.user}>
       <Space align="center">
+        <Popover
+          placement="bottom"
+          content={
+            <CirclePicker
+              onChange={(color) => {
+                console.log(color);
+                dispatch({
+                  type: 'global/changeTheme',
+                  payload: color.hex,
+                });
+              }}
+            />
+          }
+          trigger="click"
+        >
+          <Button ghost>切换主题</Button>
+        </Popover>
         <Avatar user={userInfo} />
         <span>hi {userInfo.name}</span>
 
@@ -142,7 +160,16 @@ export const Header: React.FC = () => {
    * @param string 搜索的字符
    */
   const handleSearch = () => {
-    history.push('/searchResult?words=' + searchWords);
+    if (!searchWords) {
+      history.replace('/?timestamp=' + new Date().getTime());
+    } else {
+      history.replace(
+        '/searchResult?words=' +
+          searchWords +
+          '&timestamp=' +
+          new Date().getTime(),
+      );
+    }
   };
 
   return (
@@ -158,15 +185,18 @@ export const Header: React.FC = () => {
             placeholder="请输入任意关键字"
             value={searchWords}
             onChange={(e) => setSearchWords(e.target.value)}
+            onKeyUp={(e) => {
+              if (e.code == 'Enter' || e.code == 'NumpadEnter') {
+                handleSearch();
+              }
+            }}
+            suffix={
+              <SearchOutlined
+                onClick={handleSearch}
+                className={styles.searchBtn}
+              />
+            }
           />
-          <Button
-            type="primary"
-            loading={false}
-            onClick={handleSearch}
-            disabled={!searchWords}
-          >
-            搜索
-          </Button>
         </Input.Group>
       </div>
       <HeaderUser userModelState={userModelState} onSignIn={openSignInForm} />

@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import { useDispatch } from 'umi';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 
 interface UsePageProps {
   pagePath: { path: string; title: string }[];
@@ -8,10 +8,10 @@ interface UsePageProps {
 export const usePage = (props: UsePageProps) => {
   const { pagePath = [] } = props;
   const dispatch = useDispatch();
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     dispatch({
       type: 'global/changePagePath',
       payload: pagePath,
     });
-  }, [dispatch, pagePath]);
+  }, [pagePath]);
 };

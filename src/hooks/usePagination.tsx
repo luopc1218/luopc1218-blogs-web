@@ -9,17 +9,15 @@ import { useCallback, useState } from 'react';
 export const usePagination = (
   defaultPage: number = 1,
   defaultPageSize: number = 20,
-): [Pagination, (newPage: number, newPageSize: number) => void] => {
+): [Pagination, (newPage: number, newPageSize?: number) => void] => {
   const [page, setPage] = useState(defaultPage);
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const setPagination = useCallback(
-    (newPage: number, newPageSize: number): void => {
+    (newPage: number, newPageSize: number = pageSize): void => {
       setPage(newPage);
-      if (newPageSize) {
-        setPageSize(newPageSize);
-      }
+      setPageSize(newPageSize);
     },
-    [],
+    [pageSize],
   );
   return [
     {

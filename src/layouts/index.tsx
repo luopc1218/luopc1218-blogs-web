@@ -2,9 +2,14 @@ import { Breadcrumb, Footer, Header, Sider } from '@/components';
 import { Affix, ConfigProvider, Layout, Modal } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import 'quill/dist/quill.snow.css';
-import React, { useEffect } from 'react';
-import type { GlobalModelState, ModelMap } from 'umi';
-import { useDispatch, useSelector } from 'umi';
+import React, { useEffect, useMemo } from 'react';
+import {
+  GlobalModelState,
+  Helmet,
+  ModelMap,
+  useDispatch,
+  useSelector,
+} from 'umi';
 import styles from './index.less';
 
 declare global {
@@ -25,16 +30,28 @@ export const LayoutContainer: React.FC = ({ children }) => {
     dispatch({
       type: 'user/checkSignIn',
     });
-  }, [dispatch, modal]);
+  }, [modal]);
 
   ConfigProvider.config({
     theme: {
-      primaryColor: globalModelState.theme.primaryColor,
+      primaryColor: globalModelState.theme,
     },
   });
+  const title = useMemo(() => {
+    return (
+      globalModelState?.sysConfig?.title +
+      (globalModelState.titlePath.length > 0 ? '-' : '') +
+      globalModelState.titlePath
+        .map((item: { path: string; title: string }) => item.title)
+        .join('-')
+    );
+  }, [globalModelState]);
 
   return (
     <ConfigProvider locale={zhCN}>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
       <Layout className={styles.layout} id="root-layout">
         <Affix offsetTop={0}>
           <Header />

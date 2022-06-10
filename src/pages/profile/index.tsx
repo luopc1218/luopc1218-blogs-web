@@ -6,9 +6,10 @@ import type { ModelMap } from '@/models';
 import type { User } from '@/types/user';
 import apis from '@/utils/apis';
 import { Button, Descriptions, message, Modal, Space, Tabs } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { UserModelState } from 'umi';
 import { useDispatch, useSelector } from 'umi';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import styles from './index.less';
 
 export const ProfilePage = () => {
@@ -34,14 +35,14 @@ export const ProfilePage = () => {
       setUserInfo(res);
     },
   );
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (isMe) {
       setUserInfo(userModelState.userInfo);
     } else {
       getUserInfo();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMe, userModelState.userInfo]);
+  }, [isMe, userModelState]);
 
   const dispatch = useDispatch();
   const loading = useMemo<boolean>(

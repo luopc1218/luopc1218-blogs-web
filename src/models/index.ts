@@ -16,7 +16,7 @@ export interface ModelMap {
 export interface GlobalModelState {
   titlePath: { title: string; path: string }[];
   sysConfig: any;
-  theme: Record<string, string>;
+  theme: string;
 }
 
 export const globalModel: Model<GlobalModelState> = {
@@ -26,9 +26,7 @@ export const globalModel: Model<GlobalModelState> = {
     sysConfig: {
       title: 'luopc1218blogs',
     },
-    theme: {
-      primaryColor: 'red',
-    },
+    theme: localStorage.getItem('theme') || '',
   },
   reducers: {
     setPagePath(state, { payload }) {
@@ -39,26 +37,22 @@ export const globalModel: Model<GlobalModelState> = {
       state.sysConfig = payload;
       return state;
     },
+    setTheme(state, { payload }) {
+      state.theme = payload;
+    },
   },
   effects: {
-    *setTitle({}, { select }) {
-      document.title = yield select((state: ModelMap) => {
-        return (
-          state.global?.sysConfig?.title +
-          (state.global.titlePath.length > 0 ? '-' : '') +
-          state.global.titlePath
-            .map((item: { path: string; title: string }) => item.title)
-            .join('-')
-        );
-      });
-    },
     *changePagePath({ payload }, { put }) {
       yield put({
         type: 'setPagePath',
         payload,
       });
+    },
+    *changeTheme({ payload }, { put }) {
+      localStorage.setItem('theme', payload);
       yield put({
-        type: 'setTitle',
+        type: 'setTheme',
+        payload: payload,
       });
     },
   },

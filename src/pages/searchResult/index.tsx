@@ -14,7 +14,7 @@ export const SearchResultPage = () => {
   });
   return (
     <div className="searchResultPage page">
-      <ArticleList className="module" words={urlParams.words} />
+      <ArticleList words={urlParams.words} timestamp={urlParams.timestamp} />
     </div>
   );
 };
