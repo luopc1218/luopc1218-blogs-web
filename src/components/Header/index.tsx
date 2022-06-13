@@ -47,7 +47,7 @@ const HeaderUser: React.FC<HeaderUserProps> = ({
   if (!userInfo) {
     return (
       <div className={styles.user}>
-        <Button type="link" onClick={onSignIn}>
+        <Button type="link" style={{ color: '#fff' }} onClick={onSignIn}>
           请登录
         </Button>
       </div>
@@ -80,23 +80,6 @@ const HeaderUser: React.FC<HeaderUserProps> = ({
   return (
     <div className={styles.user}>
       <Space align="center">
-        <Popover
-          placement="bottom"
-          content={
-            <CirclePicker
-              onChange={(color) => {
-                console.log(color);
-                dispatch({
-                  type: 'global/changeTheme',
-                  payload: color.hex,
-                });
-              }}
-            />
-          }
-          trigger="click"
-        >
-          <Button ghost>切换主题</Button>
-        </Popover>
         <Avatar user={userInfo} />
         <span>hi {userInfo.name}</span>
 
@@ -199,6 +182,22 @@ export const Header: React.FC = () => {
           />
         </Input.Group>
       </div>
+      <Popover
+        placement="bottom"
+        content={
+          <CirclePicker
+            onChange={(color) => {
+              dispatch({
+                type: 'global/changeTheme',
+                payload: color.hex,
+              });
+            }}
+          />
+        }
+        trigger="click"
+      >
+        <Button ghost>切换主题</Button>
+      </Popover>
       <HeaderUser userModelState={userModelState} onSignIn={openSignInForm} />
     </Layout.Header>
   );

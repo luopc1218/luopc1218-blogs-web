@@ -1,4 +1,4 @@
-import { usePage, useUrlParams } from '@/hooks';
+import { usePage } from '@/hooks';
 import { ArticleList } from './components';
 import styles from './index.less';
 
@@ -6,11 +6,9 @@ import styles from './index.less';
 export const IndexPage = () => {
   usePage({ pagePath: [] });
 
-  const [urlParams] = useUrlParams();
-
   return (
     <div className={`page ${styles.indexPage}`}>
-      <ArticleList timestamp={urlParams.timestamp} />
+      <ArticleList />
     </div>
   );
 };

@@ -1,19 +1,23 @@
 import { usePagination } from '@/hooks';
 import type { Pagination } from '@/types/pagination';
+import { Divider, Spin } from 'antd';
 import { useEffect, useRef } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import Empty from '../Empty';
 
 export interface PaginationListProps {
-  disabled: boolean;
   noMoreData: boolean;
   onPageChange: (pagination: Pagination) => void;
+  loading?: boolean;
+  empty?: boolean;
 }
 
 export const PaginationList: React.FC<PaginationListProps> = ({
   children,
-  disabled,
   noMoreData,
   onPageChange,
+  loading = false,
+  empty = true,
 }) => {
   const [pagination, setPagination] = usePagination();
 
@@ -38,21 +42,28 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     }
   };
   useEffect(() => {
-    if (!disabled) {
+    if (!loading) {
       window.addEventListener('scroll', handleScroll);
     }
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [disabled]);
+  }, [loading]);
 
   useDeepCompareEffect(() => {
     onPageChange(pagination);
   }, [pagination]);
 
+  if (empty && !loading) return <Empty />;
   return (
     <div ref={listRef} className="paginationList">
       {children}
+      {loading && (
+        <Divider>
+          <Spin />
+        </Divider>
+      )}
+      {noMoreData && !loading && <Divider>已经到底了</Divider>}
     </div>
   );
 };
