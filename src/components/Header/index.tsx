@@ -42,7 +42,11 @@ const HeaderUser: React.FC<HeaderUserProps> = ({
   const dispatch = useDispatch();
 
   if (loading) {
-    return <Spin />;
+    return (
+      <div className={styles.user}>
+        <Spin />
+      </div>
+    );
   }
   if (!userInfo) {
     return (

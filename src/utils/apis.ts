@@ -73,6 +73,10 @@ export const apis: Record<string, Api> = {
   },
   sendArticleCommentReply: {
     url: '/api/article/sendArticleCommentReply',
+    method: 'POST',
+  },
+  getArticleCommentReplyList: {
+    url: '/api/article/getArticleCommentReplyList',
     method: 'GET',
   },
 };

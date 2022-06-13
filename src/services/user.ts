@@ -13,7 +13,8 @@ export const UserService: Service = {
       md5Object(signUpFormData, ['password']),
     );
     localStorage.setItem('accessToken', token);
-    return token;
+    location.reload();
+    // return token;
   },
   // 注册
   async signUp(signUpFormData: SignUpFormData) {

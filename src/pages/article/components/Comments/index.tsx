@@ -15,6 +15,7 @@ import 'quill/dist/quill.snow.css';
 import { useState } from 'react';
 import type { ModelMap, UserModelState } from 'umi';
 import { Link, useSelector } from 'umi';
+import CommentReplys from '../CommentReplys';
 import styles from './index.less';
 
 export interface CommentsProps {
@@ -84,6 +85,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
           }
           return item;
         });
+
         return newValue;
       });
     });
@@ -121,44 +123,16 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
     });
   };
 
-  const [commentReplyStates, setCommentReplyStates] = useState<{
-    commentId: number | undefined;
-    content: string;
-    targetUser: number | undefined;
-  }>({
-    commentId: undefined,
-    content: '',
-    targetUser: undefined,
-  });
+  const [replyingCommentId, setReplyingCommentId] = useState<
+    number | undefined
+  >(undefined);
 
-  const handleReplyComment = (
-    commentId: number,
-    targetUser: number | undefined = undefined,
-  ) => {
-    setCommentReplyStates({
-      commentId,
-      content: '',
-      targetUser,
-    });
-  };
-
-  const [sendCommentReply, sendCommentReplyLoading] = useFetch(
-    apis.sendArticleCommentReply,
-  );
-
-  const handleSendCommentReply = () => {
-    sendCommentReply({
-      commentId: commentReplyStates.commentId,
-      content: commentReplyStates.content,
-      targetUser: commentReplyStates.targetUser,
-    }).then((res) => {
-      if (!res) return false;
-      setCommentReplyStates({
-        commentId: undefined,
-        content: '',
-        targetUser: undefined,
-      });
-    });
+  const handleToggleCommentReplys = (commentId: number) => {
+    if (replyingCommentId === commentId) {
+      setReplyingCommentId(undefined);
+      return;
+    }
+    setReplyingCommentId(commentId);
   };
 
   return (
@@ -212,20 +186,26 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
                     align="center"
                     split={<Divider type="vertical" style={{ margin: 0 }} />}
                   >
-                    <Badge
-                      count={item.replyCount}
-                      className={styles.ctrl}
-                      size="small"
-                      title="回复"
-                    >
-                      <Iconfont
-                        onClick={() => {
-                          handleReplyComment(item.id);
-                        }}
+                    {userModelState.userInfo && (
+                      <Badge
+                        count={item.replyCount}
+                        className={styles.ctrl}
+                        size="small"
                         title="回复"
-                        type="icon-phone"
-                      />
-                    </Badge>
+                      >
+                        <Iconfont
+                          onClick={() => {
+                            handleToggleCommentReplys(item.id);
+                          }}
+                          title="回复"
+                          type={
+                            replyingCommentId === item.id
+                              ? 'icon-comments-fill'
+                              : 'icon-comments'
+                          }
+                        />
+                      </Badge>
+                    )}
                     <Badge
                       count={item.likeCount}
                       className={styles.ctrl}
@@ -257,32 +237,8 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
                   dangerouslySetInnerHTML={{ __html: item.content }}
                 />
                 <div className={styles.time}>{formatTime(item.time)}</div>
-                {commentReplyStates.commentId === item.id && (
-                  <div>
-                    <Divider />
-                    <RichTextEditor
-                      placeholder="请输入评论"
-                      value={commentReplyStates.content}
-                      onChange={(value) => {
-                        setCommentReplyStates({
-                          ...commentReplyStates,
-                          content: value,
-                        });
-                      }}
-                    />
-                    <div style={{ padding: '1rem', textAlign: 'center' }}>
-                      <Button
-                        loading={sendCommentReplyLoading}
-                        disabled={!commentReplyStates.content}
-                        type="primary"
-                        size="large"
-                        shape="round"
-                        onClick={handleSendCommentReply}
-                      >
-                        发送
-                      </Button>
-                    </div>
-                  </div>
+                {replyingCommentId === item.id && (
+                  <CommentReplys commentId={item.id} />
                 )}
               </ColumnSpace>
             </Card>

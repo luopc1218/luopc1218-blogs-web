@@ -22,9 +22,6 @@ export const userModel: Model<UserModelState> = {
     setCheckSignInLoading(state, { payload }) {
       return { ...state, checkSignInLoading: payload };
     },
-    clearUserInfo(state) {
-      return { ...state, userInfo: undefined };
-    },
     setGetUserInfoLoading(state, { payload }) {
       return { ...state, getUserInfoLoading: payload };
     },
@@ -33,14 +30,14 @@ export const userModel: Model<UserModelState> = {
     *signIn({ payload }, { put }) {
       const { signInFormData, reslove, reject } = payload;
       try {
-        const accessToken = yield UserService.signIn(signInFormData);
-        reslove();
-        yield put({
-          type: 'checkSignIn',
-          payload: {
-            accessToken,
-          },
-        });
+        yield UserService.signIn(signInFormData);
+        // reslove();
+        // yield put({
+        //   type: 'checkSignIn',
+        //   payload: {
+        //     accessToken,
+        //   },
+        // });
       } catch (e) {
         reject();
       }
@@ -90,11 +87,12 @@ export const userModel: Model<UserModelState> = {
         payload: false,
       });
     },
-    *signOut({}, { put }) {
-      yield put({
-        type: 'clearUserInfo',
-      });
-      localStorage.removeItem('accessToken');
+    *signOut() {
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        localStorage.removeItem('accessToken');
+        location.reload();
+      }
     },
     *changeAvatar({ payload }, { put }) {
       try {
