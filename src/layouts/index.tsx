@@ -1,15 +1,10 @@
-import { Breadcrumb, Footer, Header, Sider } from '@/components';
+import { Breadcrumb, Footer, Header, NoticeDrawer, Sider } from '@/components';
 import { Affix, ConfigProvider, Layout, Modal } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import 'quill/dist/quill.snow.css';
 import React, { useEffect, useMemo } from 'react';
-import {
-  GlobalModelState,
-  Helmet,
-  ModelMap,
-  useDispatch,
-  useSelector,
-} from 'umi';
+import type { GlobalModelState, ModelMap } from 'umi';
+import { Helmet, useDispatch, useSelector } from 'umi';
 import styles from './index.less';
 
 declare global {
@@ -61,12 +56,13 @@ export const LayoutContainer: React.FC = ({ children }) => {
         </div>
         <Layout style={{ padding: '0 1rem' }}>
           <Layout.Content className={styles.content}>{children}</Layout.Content>
-          {globalModelState.enableSider && <Sider />}
+          {globalModelState.siderVisible && <Sider />}
         </Layout>
         <Footer />
       </Layout>
 
       {contextHolder}
+      <NoticeDrawer />
     </ConfigProvider>
   );
 };

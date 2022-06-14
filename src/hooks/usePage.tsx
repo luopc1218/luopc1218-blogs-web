@@ -3,11 +3,11 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 
 interface UsePageProps {
   pagePath: { path: string; title: string }[];
-  enableSider?: boolean;
+  siderVisible?: boolean;
 }
 
 export const usePage = (props: UsePageProps) => {
-  const { pagePath = [], enableSider = true } = props;
+  const { pagePath = [], siderVisible = true } = props;
   const dispatch = useDispatch();
   useDeepCompareEffect(() => {
     dispatch({
@@ -16,7 +16,7 @@ export const usePage = (props: UsePageProps) => {
     });
     dispatch({
       type: 'global/changeEnableSider',
-      payload: enableSider,
+      payload: siderVisible,
     });
-  }, [pagePath, enableSider]);
+  }, [pagePath, siderVisible]);
 };

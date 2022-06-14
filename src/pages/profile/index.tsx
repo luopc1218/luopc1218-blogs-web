@@ -58,7 +58,7 @@ export const ProfilePage = () => {
   );
   usePage({
     pagePath: [{ path: '/profile', title: '个人信息' }],
-    enableSider: false,
+    siderVisible: false,
   });
 
   // 监听修改头像

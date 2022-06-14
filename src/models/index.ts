@@ -1,4 +1,4 @@
-import type { Effect, ImmerReducer } from 'umi';
+import type { Effect, ImmerReducer, NoticeModelState } from 'umi';
 import type { UserModelState } from './user';
 
 export interface Model<T> {
@@ -11,13 +11,14 @@ export interface Model<T> {
 export interface ModelMap {
   global: GlobalModelState;
   user: UserModelState;
+  notice: NoticeModelState;
 }
 
 export interface GlobalModelState {
   titlePath: { title: string; path: string }[];
   sysConfig: any;
   theme: string;
-  enableSider: boolean;
+  siderVisible: boolean;
 }
 
 export const globalModel: Model<GlobalModelState> = {
@@ -28,7 +29,7 @@ export const globalModel: Model<GlobalModelState> = {
       title: 'luopc1218blogs',
     },
     theme: localStorage.getItem('theme') || '',
-    enableSider: true,
+    siderVisible: true,
   },
   reducers: {
     setPagePath(state, { payload }) {
@@ -43,7 +44,7 @@ export const globalModel: Model<GlobalModelState> = {
       state.theme = payload;
     },
     setEnableSider(state, { payload }) {
-      state.enableSider = payload;
+      state.siderVisible = payload;
     },
   },
   effects: {
