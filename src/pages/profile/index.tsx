@@ -56,7 +56,10 @@ export const ProfilePage = () => {
       userModelState.getUserInfoLoading,
     ],
   );
-  usePage({ pagePath: [{ path: '/profile', title: '个人信息' }] });
+  usePage({
+    pagePath: [{ path: '/profile', title: '个人信息' }],
+    siderVisible: false,
+  });
 
   // 监听修改头像
   const handleChangeAvatar = (url: string) => {

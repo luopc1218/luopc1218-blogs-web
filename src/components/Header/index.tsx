@@ -1,8 +1,9 @@
-import { Avatar } from '@/components';
+import { Avatar, Iconfont } from '@/components';
 import type { ModelMap } from '@/models';
 import type { User } from '@/types/user';
-import { MoreOutlined, SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import {
+  Badge,
   Button,
   Dropdown,
   Input,
@@ -15,21 +16,25 @@ import {
 } from 'antd';
 import { useMemo, useState } from 'react';
 import { CirclePicker } from 'react-color';
-import type { UserModelState } from 'umi';
+import type { NoticeModelState, UserModelState } from 'umi';
 import { Link, useDispatch, useHistory, useSelector } from 'umi';
 import type { SignInFormData } from '../FormModal';
 import { FormModal, SignInForm } from '../FormModal';
 import styles from './index.less';
 
-interface HeaderUserProps {
-  userModelState: UserModelState;
-  onSignIn: () => void;
-}
+const HeaderUser: React.FC = () => {
+  const selectModel: {
+    userModelState: UserModelState;
+    noticeModelState: NoticeModelState;
+  } = useSelector((state: ModelMap) => {
+    return {
+      userModelState: state.user,
+      noticeModelState: state.notice,
+    };
+  });
 
-const HeaderUser: React.FC<HeaderUserProps> = ({
-  userModelState,
-  onSignIn,
-}) => {
+  const { userModelState, noticeModelState } = selectModel;
+
   const loading = useMemo<boolean>(
     () =>
       userModelState.checkSignInLoading || userModelState.getUserInfoLoading,
@@ -41,17 +46,40 @@ const HeaderUser: React.FC<HeaderUserProps> = ({
   );
   const dispatch = useDispatch();
 
+  const handleSignIn = () => {
+    FormModal.open<SignInFormData>(
+      SignInForm,
+      (signInFormData, reslove, reject) => {
+        dispatch({
+          type: 'user/signIn',
+          payload: {
+            signInFormData,
+            reslove,
+            reject,
+          },
+        });
+      },
+      {
+        title: null,
+        icon: null,
+        okText: '立即登录',
+        closable: true,
+      },
+      'signInForm',
+    );
+  };
+
   if (loading) {
     return (
-      <div className={styles.user}>
+      <div className={styles.headerUser}>
         <Spin />
       </div>
     );
   }
   if (!userInfo) {
     return (
-      <div className={styles.user}>
-        <Button type="link" style={{ color: '#fff' }} onClick={onSignIn}>
+      <div className={styles.headerUser}>
+        <Button type="link" style={{ color: '#fff' }} onClick={handleSignIn}>
           请登录
         </Button>
       </div>
@@ -81,9 +109,26 @@ const HeaderUser: React.FC<HeaderUserProps> = ({
       }
     }
   };
+
+  const handleOpenNoticeCenter = () => {
+    dispatch({
+      type: 'notice/openNoticeDrawer',
+    });
+  };
+
   return (
-    <div className={styles.user}>
+    <div className={styles.headerUser}>
       <Space align="center">
+        <Badge
+          count={noticeModelState.unreadNoticeCount}
+          className={styles.notice}
+        >
+          <Iconfont
+            onClick={handleOpenNoticeCenter}
+            className={`clickable ${styles.icon}`}
+            type="icon-messagecenter-fill"
+          />
+        </Badge>
         <Avatar user={userInfo} />
         <span>hi {userInfo.name}</span>
 
@@ -103,7 +148,9 @@ const HeaderUser: React.FC<HeaderUserProps> = ({
             />
           }
         >
-          <MoreOutlined className={styles.userInfoBtn} />
+          <div className={styles.userInfoBtn}>
+            <Iconfont className="clickable" type="icon-ellipsis" />
+          </div>
         </Dropdown>
       </Space>
     </div>
@@ -113,33 +160,6 @@ const HeaderUser: React.FC<HeaderUserProps> = ({
 export const Header: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const userModelState = useSelector<ModelMap, UserModelState>(
-    (state: ModelMap) => {
-      return state.user;
-    },
-  );
-  const openSignInForm = () => {
-    FormModal.open<SignInFormData>(
-      SignInForm,
-      (signInFormData, reslove, reject) => {
-        dispatch({
-          type: 'user/signIn',
-          payload: {
-            signInFormData,
-            reslove,
-            reject,
-          },
-        });
-      },
-      {
-        title: null,
-        icon: null,
-        okText: '立即登录',
-        closable: true,
-      },
-      'signInForm',
-    );
-  };
 
   const [searchWords, setSearchWords] = useState('');
   /**
@@ -202,7 +222,7 @@ export const Header: React.FC = () => {
       >
         <Button ghost>切换主题</Button>
       </Popover>
-      <HeaderUser userModelState={userModelState} onSignIn={openSignInForm} />
+      <HeaderUser />
     </Layout.Header>
   );
 };

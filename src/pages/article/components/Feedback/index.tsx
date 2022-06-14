@@ -28,9 +28,12 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
   const [toggleArticleLike, toggleArticleLikeLoading] = useFetch(
     apis.toggleArticleLike,
     {},
-    getArticleFeedback,
-    {
-      showSuccessMessage: false,
+    (res) => {
+      if (res) {
+        getArticleFeedback({
+          articleId,
+        });
+      }
     },
   );
 
@@ -49,14 +52,20 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
   };
   const [toggleArticleCollect, toggleArticleCollectLoading] = useFetch(
     apis.toggleArticleCollect,
-    {
-      articleId: articleId,
+    {},
+    (res) => {
+      if (res) {
+        getArticleFeedback({
+          articleId,
+        });
+      }
     },
-    getArticleFeedback,
   );
 
   const handleToggleArticleCollect = () => {
-    toggleArticleCollect();
+    toggleArticleCollect({
+      articleId,
+    });
   };
 
   return (

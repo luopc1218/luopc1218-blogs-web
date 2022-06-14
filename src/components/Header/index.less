@@ -26,15 +26,25 @@
       }
     }
   }
+}
 
-  .user {
+.headerUser {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  color: #fff;
+  .notice {
     display: flex;
-    flex: 1;
-    justify-content: flex-end;
-    color: #fff;
-    .userInfoBtn {
-      font-size: 20px;
-      cursor: pointer;
+    align-items: center;
+    margin: 0 1rem;
+    .icon {
+      color: #fff;
+      font-size: 30px;
     }
+  }
+  .userInfoBtn {
+    display: flex;
+    align-items: center;
+    font-size: 30px;
   }
 }
