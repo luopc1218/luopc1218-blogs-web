@@ -21,6 +21,7 @@ export const useFetchData = <T = any,>(
       const resData = await request(api, newParams || params, requestOptions);
       setData(resData);
       setLoading(false);
+      return resData;
     } catch (error) {
       setLoading(false);
     }

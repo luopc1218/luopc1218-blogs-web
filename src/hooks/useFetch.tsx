@@ -19,6 +19,7 @@ export const useFetch = <T = any,>(
       const resData = await request(api, newParams || params, requestOptions);
       callback(resData);
       setLoading(false);
+      return resData;
     } catch (error) {
       setLoading(false);
     }

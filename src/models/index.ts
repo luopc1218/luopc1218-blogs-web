@@ -17,6 +17,7 @@ export interface GlobalModelState {
   titlePath: { title: string; path: string }[];
   sysConfig: any;
   theme: string;
+  enableSider: boolean;
 }
 
 export const globalModel: Model<GlobalModelState> = {
@@ -27,6 +28,7 @@ export const globalModel: Model<GlobalModelState> = {
       title: 'luopc1218blogs',
     },
     theme: localStorage.getItem('theme') || '',
+    enableSider: true,
   },
   reducers: {
     setPagePath(state, { payload }) {
@@ -39,6 +41,9 @@ export const globalModel: Model<GlobalModelState> = {
     },
     setTheme(state, { payload }) {
       state.theme = payload;
+    },
+    setEnableSider(state, { payload }) {
+      state.enableSider = payload;
     },
   },
   effects: {
@@ -53,6 +58,12 @@ export const globalModel: Model<GlobalModelState> = {
       yield put({
         type: 'setTheme',
         payload: payload,
+      });
+    },
+    *changeEnableSider({ payload }, { put }) {
+      yield put({
+        type: 'setEnableSider',
+        payload,
       });
     },
   },

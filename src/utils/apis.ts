@@ -75,6 +75,18 @@ export const apis: Record<string, Api> = {
     url: '/api/article/sendArticleCommentReply',
     method: 'GET',
   },
+  getArticleRankingList: {
+    url: '/api/article/getArticleRankingList',
+    method: 'GET',
+  },
+  upgradeArticleViewCount: {
+    url: '/api/article/upgradeArticleViewCount',
+    method: 'POST',
+  },
+  getAuthorRankingList: {
+    url: '/api/article/getAuthorRankingList',
+    method: 'GET',
+  },
 };
 
 export default apis;

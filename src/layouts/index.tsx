@@ -61,7 +61,7 @@ export const LayoutContainer: React.FC = ({ children }) => {
         </div>
         <Layout style={{ padding: '0 1rem' }}>
           <Layout.Content className={styles.content}>{children}</Layout.Content>
-          <Sider />
+          {globalModelState.enableSider && <Sider />}
         </Layout>
         <Footer />
       </Layout>
