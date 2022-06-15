@@ -80,7 +80,7 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
       <Divider style={{ marginBottom: 10 }} />
       <Space>
         <div
-          className={styles.operate}
+          className={`clickable ${styles.operate}`}
           onClick={handleToggleArticleCollect}
           title="收藏"
         >
@@ -94,7 +94,7 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
           {articleFeedback?.collectCount}
         </div>
         <div
-          className={styles.operate}
+          className={`clickable ${styles.operate}`}
           title="点赞"
           onClick={() => handleArticleToogleLike(0)}
         >
@@ -106,7 +106,7 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
           {articleFeedback?.likeCount}
         </div>
         <div
-          className={styles.operate}
+          className={`clickable ${styles.operate}`}
           title="点踩"
           onClick={() => handleArticleToogleLike(1)}
         >

@@ -1,6 +1,8 @@
+import type { CSSProperties } from 'react';
 import type { ReactQuillProps } from 'react-quill';
 import ReactQuill from 'react-quill';
 import './index.less';
+import styles from './index.less';
 
 export const RichTextEditor: React.FC<ReactQuillProps> = ({
   modules = {
@@ -26,5 +28,31 @@ export const RichTextEditor: React.FC<ReactQuillProps> = ({
   },
   ...rest
 }) => {
-  return <ReactQuill className="richTextEditor" modules={modules} {...rest} />;
+  return (
+    <ReactQuill className={styles.richTextEditor} modules={modules} {...rest} />
+  );
 };
+
+export interface RichTextViewerProps {
+  html: string;
+  className?: string;
+  style?: CSSProperties;
+}
+export const RichTextViewer: React.FC<RichTextViewerProps> = ({
+  html,
+  className = '',
+  style,
+}) => {
+  return (
+    <div
+      className={`ql-snow  ${className} ${styles.richTextViewer}`}
+      style={style}
+    >
+      <div className={`ql-editor ${styles.content}`}>
+        <div dangerouslySetInnerHTML={{ __html: html }} />
+      </div>
+    </div>
+  );
+};
+
+export default RichTextEditor;

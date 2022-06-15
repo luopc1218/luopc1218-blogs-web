@@ -3,6 +3,7 @@ import {
   Iconfont,
   PaginationList,
   RichTextEditor,
+  RichTextViewer,
 } from '@/components';
 import { useFetch } from '@/hooks';
 import type { ArticleComment } from '@/types/article';
@@ -144,6 +145,10 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
             placeholder="请输入评论"
             value={inputingComment}
             onChange={setInputingComment}
+            style={{
+              // minHeight: 200,
+              width: '100%',
+            }}
           />
           <Button
             disabled={!inputingComment}
@@ -189,7 +194,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
                     {userModelState.userInfo && (
                       <Badge
                         count={item.replyCount}
-                        className={styles.ctrl}
+                        className={`clickable ${styles.ctrl}`}
                         size="small"
                         title="回复"
                       >
@@ -208,7 +213,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
                     )}
                     <Badge
                       count={item.likeCount}
-                      className={styles.ctrl}
+                      className={`clickable ${styles.ctrl}`}
                       size="small"
                       title="点赞"
                     >
@@ -226,15 +231,15 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
                           handleDeleteComment(item.id);
                         }}
                         title="删除"
-                        className={styles.ctrl}
+                        className={`clickable ${styles.ctrl}`}
                         type="icon-close"
                       />
                     )}
                   </Space>
                 </div>
-                <div
-                  className={`ql-editor ${styles.content}`}
-                  dangerouslySetInnerHTML={{ __html: item.content }}
+                <RichTextViewer
+                  className={`${styles.content}`}
+                  html={item.content}
                 />
                 <div className={styles.time}>{formatTime(item.time)}</div>
                 {replyingCommentId === item.id && (
