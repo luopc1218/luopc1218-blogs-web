@@ -69,6 +69,7 @@ export const ArticleCommentItem: React.FC<ArticleCommentItemProps> = ({
       }
       onReply(commentInfo.id);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [commentInfo.id, replyingComment?.id, showReply],
   );
 

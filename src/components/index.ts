@@ -11,7 +11,6 @@ export * from './Iconfont';
 export * from './LoadingContainer';
 export * from './NoticeDrawer';
 export * from './PaginationList';
-export * from './PaginationList/legacy';
 export * from './RemoteTable';
 export * from './RichTextEditor';
 export * from './Sider';

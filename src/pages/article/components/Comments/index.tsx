@@ -1,7 +1,7 @@
 import { ColumnSpace, PaginationList, RichTextEditor } from '@/components';
 import { useFetch } from '@/hooks';
 import usePaginationList from '@/hooks/usePaginationList';
-import { ArticleComment } from '@/types/article';
+import type { ArticleComment } from '@/types/article';
 import apis from '@/utils/apis';
 import { Button, Modal } from 'antd';
 import 'quill/dist/quill.snow.css';
@@ -99,6 +99,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
         });
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [toggleCommentLikeLoading],
   );
 
@@ -137,6 +138,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
         danger: true,
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [getCommentReplyCount] = useFetch<number>(
@@ -160,6 +162,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
         return newValue;
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -1,6 +1,6 @@
 import { useFetch, usePagination } from '@/hooks';
-import { ListResponse } from '@/types/response';
-import { Api } from '@/utils/apis';
+import type { ListResponse } from '@/types/response';
+import type { Api } from '@/utils/apis';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import LoadingContainer from '../LoadingContainer';
@@ -45,6 +45,7 @@ export const PaginationList: React.FC<PaginationListProps> = ({
 
   useEffect(() => {
     onDataChange(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handleFetchData = () => {
@@ -92,6 +93,7 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getDataLoading]);
 
   return (

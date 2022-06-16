@@ -80,7 +80,7 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
       <Divider style={{ marginBottom: 10 }} />
       <Space>
         <Space className={`${styles.operate}`} title="访问量">
-          <Iconfont type="icon-browse"></Iconfont>
+          <Iconfont type="icon-browse" />
           <div>{articleInfo?.viewCount}</div>
         </Space>
         <div
