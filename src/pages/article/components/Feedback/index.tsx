@@ -79,6 +79,10 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
     >
       <Divider style={{ marginBottom: 10 }} />
       <Space>
+        <Space className={`${styles.operate}`} title="访问量">
+          <Iconfont type="icon-browse"></Iconfont>
+          <div>{articleInfo?.viewCount}</div>
+        </Space>
         <div
           className={`clickable ${styles.operate}`}
           onClick={handleToggleArticleCollect}

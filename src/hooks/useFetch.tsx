@@ -8,9 +8,11 @@ export const useFetch = <T = any,>(
   params: Record<string, any> | FormData | undefined = {},
   callback: (resData: T) => any = () => {},
   requestOptions: ResponseOptions = {},
-): [(newParams?: any) => Promise<undefined>, boolean] => {
+): [(newParams?: any) => Promise<T | undefined>, boolean] => {
   const [loading, setLoading] = useState<boolean>(false);
-  const handleRequest = async (newParams: any = undefined) => {
+  const handleRequest = async (
+    newParams: any = undefined,
+  ): Promise<T | undefined> => {
     if (!api) {
       return Promise.reject();
     }
@@ -22,6 +24,7 @@ export const useFetch = <T = any,>(
       return resData;
     } catch (error) {
       setLoading(false);
+      return undefined;
     }
   };
 

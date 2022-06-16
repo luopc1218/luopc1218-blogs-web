@@ -1,5 +1,4 @@
 import { ColumnSpace, Iconfont, PaginationList } from '@/components';
-import { useFetch } from '@/hooks';
 import type { ListResponse } from '@/types/response';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
@@ -17,31 +16,9 @@ export interface ArticleListProps {
 
 export const ArticleList: React.FC<ArticleListProps> = ({ words }) => {
   const [articles, setArticles] = useState<ListResponse | undefined>(undefined);
-  const [getArticles, getArticlesLoading] = useFetch<ListResponse>(
-    apis.getArticleList,
-    {},
-    (res) => {
-      setArticles((oldValue) => {
-        if (!oldValue) {
-          return res;
-        }
-        return {
-          list: [...oldValue.list, ...res.list],
-          totalCount: res.totalCount,
-        };
-      });
-    },
-  );
 
   return (
-    <PaginationList
-      onPageChange={(pagination) => {
-        getArticles({ words, ...pagination });
-      }}
-      noMoreData={(articles?.totalCount || 0) <= (articles?.list?.length || 0)}
-      loading={getArticlesLoading}
-      empty={!articles?.totalCount}
-    >
+    <PaginationList api={apis.getArticleList} onDataChange={setArticles}>
       <ColumnSpace>
         {articles?.list?.map((item) => (
           <div key={item.id}>

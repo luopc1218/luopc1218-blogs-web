@@ -71,8 +71,8 @@ export const apis: Record<string, Api> = {
     url: '/api/article/deleteArticleComment',
     method: 'POST',
   },
-  sendArticleCommentReply: {
-    url: '/api/article/sendArticleCommentReply',
+  addArticleCommentReply: {
+    url: '/api/article/addArticleCommentReply',
     method: 'POST',
   },
   getArticleCommentReplyList: {
@@ -89,6 +89,10 @@ export const apis: Record<string, Api> = {
   },
   getAuthorRankingList: {
     url: '/api/article/getAuthorRankingList',
+    method: 'GET',
+  },
+  getArticleCommentReplyCount: {
+    url: '/api/article/getArticleCommentReplyCount',
     method: 'GET',
   },
 };

@@ -1,39 +1,82 @@
-import { usePagination } from '@/hooks';
-import type { Pagination } from '@/types/pagination';
-import { Divider, Spin } from 'antd';
-import { useEffect, useRef } from 'react';
+import { useFetch, usePagination } from '@/hooks';
+import { ListResponse } from '@/types/response';
+import { Api } from '@/utils/apis';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import Empty from '../Empty';
+import LoadingContainer from '../LoadingContainer';
 
 export interface PaginationListProps {
-  noMoreData: boolean;
-  onPageChange: (pagination: Pagination) => void;
-  loading?: boolean;
-  empty?: boolean;
+  api: Api;
+  params?: any;
+  onDataChange?: (data: any) => void;
+  render?: (
+    data: any,
+    setData: React.Dispatch<
+      React.SetStateAction<ListResponse<any> | undefined>
+    >,
+  ) => JSX.Element;
 }
 
 export const PaginationList: React.FC<PaginationListProps> = ({
+  api,
+  params = {},
+  onDataChange = () => null,
+  render = () => null,
   children,
-  noMoreData,
-  onPageChange,
-  loading = false,
-  empty = true,
 }) => {
-  const [pagination, setPagination] = usePagination();
-
   const listRef = useRef<HTMLDivElement>(null);
 
-  const handleNextPage = () => {
-    setPagination(pagination.page + 1);
+  const [pagination, setPagination] = usePagination();
+
+  const [data, setData] = useState<ListResponse | undefined>(undefined);
+
+  const noMoreData = useMemo(() => {
+    return data && data.list.length >= data.totalCount;
+  }, [data]);
+
+  const [getData, getDataLoading] = useFetch(api, {}, (res) => {
+    setData((oldValue) => {
+      if (!oldValue) return res;
+      const newValue = { ...oldValue };
+      newValue.list = [...oldValue?.list, ...res.list];
+      return newValue;
+    });
+  });
+
+  useEffect(() => {
+    onDataChange(data);
+  }, [data]);
+
+  const handleFetchData = () => {
+    getData({ ...pagination, ...params });
   };
+
+  // 第一次请求
+  useDeepCompareEffect(() => {
+    if (pagination.page !== 1) {
+      setPagination(1);
+    }
+    setData(undefined);
+    handleFetchData();
+  }, [params]);
+
+  // 后续请求
+  useDeepCompareEffect(() => {
+    if (pagination.page !== 1) {
+      handleFetchData();
+    }
+  }, [pagination]);
+
   const handleTouchGround = () => {
     if (!noMoreData) {
-      handleNextPage();
+      setPagination(pagination.page + 1);
     }
   };
+
   const handleScroll = (e: any) => {
     const listElement: HTMLDivElement | null = listRef.current;
     const bodyElement = e.target.documentElement;
+
     if (
       listElement &&
       listElement.getBoundingClientRect()?.bottom < bodyElement.clientHeight
@@ -41,30 +84,27 @@ export const PaginationList: React.FC<PaginationListProps> = ({
       handleTouchGround();
     }
   };
+
   useEffect(() => {
-    if (!loading) {
+    if (!getDataLoading) {
       window.addEventListener('scroll', handleScroll);
     }
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [loading]);
+  }, [getDataLoading]);
 
-  useDeepCompareEffect(() => {
-    onPageChange(pagination);
-  }, [pagination]);
-
-  if (empty && !loading) return <Empty />;
   return (
-    <div ref={listRef} className="paginationList">
-      {children}
-      {loading && (
-        <Divider>
-          <Spin />
-        </Divider>
-      )}
-      {noMoreData && !loading && <Divider>已经到底了</Divider>}
-    </div>
+    <LoadingContainer
+      loading={getDataLoading}
+      empty={data && data.list.length <= 0}
+      className="paginationList"
+    >
+      <div ref={listRef}>
+        {render(data, setData)}
+        {children}
+      </div>
+    </LoadingContainer>
   );
 };
 export default PaginationList;

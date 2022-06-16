@@ -28,10 +28,9 @@ export interface ArticleComment {
   from: number;
   fromName: string;
   fromAvatarUrl: string;
-  to: number;
   content: string;
   replyCount: number;
   likeCount: number;
-  likeCountStatus: boolean;
+  likeStatus: boolean;
   time: string;
 }

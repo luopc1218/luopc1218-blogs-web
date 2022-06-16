@@ -1,11 +1,13 @@
 import { Empty } from '@/components';
 import { Spin } from 'antd';
 
-export interface LoadingContainerProps {
+export interface LoadingContainerProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {
   loading: boolean;
   empty?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
 }
 
 /**
@@ -17,11 +19,10 @@ export const LoadingContainer: React.FC<LoadingContainerProps> = ({
   loading,
   empty,
   children,
-  className,
-  style,
+  ...rest
 }) => {
   return (
-    <div className={className} style={style}>
+    <div {...rest}>
       <Spin spinning={loading}>{empty ? <Empty /> : children}</Spin>
     </div>
   );

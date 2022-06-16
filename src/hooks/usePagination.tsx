@@ -19,6 +19,7 @@ export const usePagination = (
     },
     [pageSize],
   );
+
   return [
     {
       page,

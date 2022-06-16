@@ -37,12 +37,15 @@ export const ArticlePage: React.FC = () => {
       <ColumnSpace>
         <ColumnSpace className="module">
           <div className={styles.title}>{articleInfo?.title}</div>
+
           <div className={styles.description}>{articleInfo?.description}</div>
-          <Space className={styles.time}>
+          <Space>
             <Avatar src={articleInfo?.authorAvatarUrl} />
             <Link to={`/profile?userId=${articleInfo?.authorId}`}>
               {articleInfo?.authorName}
             </Link>
+          </Space>
+          <Space className={styles.time}>
             <span>于{formatTime(articleInfo?.createTime)}创建</span>
             {articleInfo?.editTime && (
               <div>{formatTime(articleInfo?.editTime)}最后修改</div>
