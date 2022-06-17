@@ -43,6 +43,10 @@ export const apis: Record<string, Api> = {
     url: '/api/article/getArticleInfo',
     method: 'GET',
   },
+  createArticle: {
+    url: '/api/article/createArticle',
+    method: 'POST',
+  },
   toggleArticleLike: {
     url: '/api/article/toggleArticleLike',
     method: 'POST',

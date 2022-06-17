@@ -17,15 +17,21 @@ export const Sider = () => {
     <Layout.Sider width={350} className={`${styles.sider}`}>
       <ColumnSpace>
         <ColumnSpace className="module">
-          <Button type="primary" size="large" block shape="round">
-            写文章
-          </Button>
-          <Button size="large" block shape="round">
-            我的文章
-          </Button>
-          <Button size="large" block shape="round">
-            我的回复
-          </Button>
+          <Link to={'/article/create'}>
+            <Button type="primary" size="large" block shape="round">
+              写文章
+            </Button>
+          </Link>
+          <Link to={'/article/myArticle'}>
+            <Button size="large" block shape="round">
+              我的文章
+            </Button>
+          </Link>
+          <Link to={'/article/myCollect'}>
+            <Button size="large" block shape="round">
+              我的收藏
+            </Button>
+          </Link>
         </ColumnSpace>
         <ColumnSpace
           className="module"

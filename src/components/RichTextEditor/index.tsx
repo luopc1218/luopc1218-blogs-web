@@ -26,10 +26,15 @@ export const RichTextEditor: React.FC<ReactQuillProps> = ({
       ['clean'], // 清除格式
     ],
   },
+  className,
   ...rest
 }) => {
   return (
-    <ReactQuill className={styles.richTextEditor} modules={modules} {...rest} />
+    <ReactQuill
+      className={`richTextEditor ${className}`}
+      modules={modules}
+      {...rest}
+    />
   );
 };
 
