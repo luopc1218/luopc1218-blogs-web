@@ -8,7 +8,7 @@ import { useCallback, useState } from 'react';
  */
 export const usePagination = (
   defaultPage: number = 1,
-  defaultPageSize: number = 20,
+  defaultPageSize: number = 10,
 ): [Pagination, (newPage: number, newPageSize?: number) => void] => {
   const [page, setPage] = useState(defaultPage);
   const [pageSize, setPageSize] = useState(defaultPageSize);

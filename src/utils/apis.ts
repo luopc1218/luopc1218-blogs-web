@@ -99,6 +99,14 @@ export const apis: Record<string, Api> = {
     url: '/api/article/getArticleCommentReplyCount',
     method: 'GET',
   },
+  getArticleTypeList: {
+    url: '/api/article/getArticleTypeList',
+    method: 'GET',
+  },
+  getArticleTagList: {
+    url: '/api/article/getArticleTagList',
+    method: 'GET',
+  },
 };
 
 export default apis;

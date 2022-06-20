@@ -10,25 +10,25 @@ import { useMemo, useState } from 'react';
 import type { UserModelState } from 'umi';
 import { useDispatch, useSelector } from 'umi';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { ArticleList, MyCollect } from './components';
 import styles from './index.less';
 
 export const ProfilePage = () => {
-  const [urlParams] = useUrlParams();
+  const [urlParams, setUrlParams] = useUrlParams();
+
+  const { userId, tab = 'setting' } = urlParams;
 
   const userModelState: UserModelState = useSelector<ModelMap, UserModelState>(
     (state: ModelMap) => state.user,
   );
   const isMe = useMemo(() => {
-    return (
-      !urlParams.userId ||
-      parseInt(urlParams.userId) === userModelState.userInfo?.id
-    );
-  }, [urlParams.userId, userModelState.userInfo?.id]);
+    return !userId || parseInt(userId) === userModelState.userInfo?.id;
+  }, [userId, userModelState.userInfo?.id]);
   const [userInfo, setUserInfo] = useState<User | undefined>(undefined);
   const [getUserInfo, getUserInfoLoading] = useFetch(
     !isMe && apis.getUserInfo,
     {
-      id: urlParams.userId,
+      id: userId,
     },
     (res) => {
       // console.log(res);
@@ -133,7 +133,23 @@ export const ProfilePage = () => {
           </Space>
         </div>
         <div className={`module ${styles.details}`}>
-          <Tabs defaultActiveKey="1">
+          <Tabs
+            defaultActiveKey={tab}
+            onChange={(key) => {
+              setUrlParams({ tab: key });
+            }}
+          >
+            <Tabs.TabPane
+              key="articleList"
+              tab={isMe ? '我的文章' : '文章列表'}
+            >
+              <ArticleList isMe={isMe} />
+            </Tabs.TabPane>
+            {isMe && (
+              <Tabs.TabPane key="myCollect" tab="我的收藏">
+                <MyCollect />
+              </Tabs.TabPane>
+            )}
             {isMe && (
               <Tabs.TabPane tab="偏好设置" key="setting">
                 <Space>

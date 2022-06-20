@@ -91,6 +91,7 @@ export const request = async <T = any>(
     },
     skipErrorHandler: true,
   };
+
   if (api.method === 'GET') {
     requestOptions.params = params;
   } else {
