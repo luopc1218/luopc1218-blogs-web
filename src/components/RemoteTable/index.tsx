@@ -2,7 +2,7 @@ import { useFetch, usePagination } from '@/hooks';
 import type { ListResponse } from '@/types/response';
 import type { Api } from '@/utils/apis';
 import { Pagination, Table, TableProps } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import ColumnSpace from '../ColumnSpace';
 import type { RemoteQueryFormItem } from '../RemoteQueryForm';
 import RemoteQueryForm from '../RemoteQueryForm';
@@ -13,12 +13,14 @@ interface RemoteTableProps extends Omit<TableProps<any>, 'pagination'> {
   queryFields?: RemoteQueryFormItem[];
 }
 
-export const RemoteTable: React.FC<RemoteTableProps> = ({
-  api,
-  params,
-  queryFields,
-  ...rest
-}) => {
+export interface RemoteTableImperativeHandle {
+  refresh: () => void;
+}
+
+export const RemoteTable = forwardRef<
+  RemoteTableImperativeHandle,
+  RemoteTableProps
+>(({ api, params, queryFields, ...rest }, ref) => {
   const [tableData, setTableData] = useState<ListResponse>({
     list: [],
     totalCount: 0,
@@ -54,6 +56,12 @@ export const RemoteTable: React.FC<RemoteTableProps> = ({
     handleGetTableData();
   }, [page, pageSize]);
 
+  useImperativeHandle(ref, () => {
+    return {
+      refresh: handleRefreshTableData,
+    };
+  });
+
   return (
     <ColumnSpace>
       {queryFields && (
@@ -82,6 +90,6 @@ export const RemoteTable: React.FC<RemoteTableProps> = ({
       </div>
     </ColumnSpace>
   );
-};
+});
 
 export default RemoteTable;

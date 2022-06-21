@@ -40,31 +40,29 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
   const handleArticleToogleLike = (type: number | undefined) => {
     if (type === articleFeedback?.likeStatus) {
       toggleArticleLike({
-        id: articleInfo?.id,
+        articleId: articleInfo?.id,
         type: 2,
       });
     } else {
       toggleArticleLike({
-        id: articleInfo?.id,
+        articleId: articleInfo?.id,
         type,
       });
     }
   };
   const [toggleArticleCollect, toggleArticleCollectLoading] = useFetch(
     apis.toggleArticleCollect,
-    {},
-    (res) => {
-      if (res) {
-        getArticleFeedback({
-          articleId,
-        });
-      }
-    },
   );
 
   const handleToggleArticleCollect = () => {
     toggleArticleCollect({
       articleId,
+    }).then((res) => {
+      if (res) {
+        getArticleFeedback({
+          articleId,
+        });
+      }
     });
   };
 

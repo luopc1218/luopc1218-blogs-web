@@ -120,7 +120,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
       type: 'warning',
       content: '确认删除这条评论？',
       onOk() {
-        deleteComment({
+        return deleteComment({
           commentId: commentId,
         }).then((res) => {
           if (!res) return false;

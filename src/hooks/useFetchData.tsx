@@ -16,13 +16,17 @@ export const useFetchData = <T = any,>(
   const [data, setData] = useState<T | undefined>(defaultValues);
 
   const [getData, getDataLoading] = useFetch(api);
+
+  const handleGetData = (newParams: any) => {
+    getData(newParams).then(setData);
+  };
   useDeepCompareEffect(() => {
     if (api) {
-      getData(params).then(setData);
+      handleGetData(params);
     }
   }, [api, params]);
 
-  return [data, getDataLoading, getData, setData];
+  return [data, getDataLoading, handleGetData, setData];
 };
 
 export default useFetchData;

@@ -1,7 +1,14 @@
-import { ColumnSpace, RemoteSelect, RemoteTable } from '@/components';
+import {
+  ColumnSpace,
+  RemoteSelect,
+  RemoteTable,
+  RemoteTableImperativeHandle,
+} from '@/components';
+import { useFetch } from '@/hooks';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
-import { Button, Space } from 'antd';
+import { Button, Modal, Space, Tag } from 'antd';
+import { useRef } from 'react';
 import { Link } from 'umi';
 
 export interface ArticleListProps {
@@ -9,9 +16,28 @@ export interface ArticleListProps {
 }
 
 export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
+  const tableRef = useRef<RemoteTableImperativeHandle>(null);
+
+  const [deleteArticle] = useFetch(apis.deleteArticle);
+
+  const handleDeleteArticle = (articleId: number) => {
+    Modal.confirm({
+      type: 'warning',
+      content: '确认删除这条评论？',
+      onOk() {
+        return deleteArticle({
+          articleId,
+        }).then((res) => {
+          if (res) tableRef.current?.refresh();
+        });
+      },
+    });
+  };
+
   return (
     <ColumnSpace>
       <RemoteTable
+        ref={tableRef}
         queryFields={[
           {
             name: 'title',
@@ -63,6 +89,23 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
             },
           },
           {
+            title: '类型',
+            dataIndex: 'typeName',
+          },
+          {
+            title: '标签',
+            dataIndex: 'tags',
+            render(value) {
+              return (
+                <Space>
+                  {value.map((tag: any) => (
+                    <Tag key={tag.id}>{tag.name}</Tag>
+                  ))}
+                </Space>
+              );
+            },
+          },
+          {
             title: '最后修改时间',
             dataIndex: 'finalTime',
             width: 200,
@@ -73,14 +116,18 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
           {
             title: '操作',
             width: 300,
-            render() {
+            render(row) {
               return (
                 <Space>
                   <Button type="link">查看</Button>
                   {isMe && (
                     <>
                       <Button type="link">编辑</Button>
-                      <Button type="link" danger>
+                      <Button
+                        type="link"
+                        danger
+                        onClick={() => handleDeleteArticle(row.id)}
+                      >
                         删除
                       </Button>
                     </>
