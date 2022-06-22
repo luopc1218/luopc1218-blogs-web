@@ -28,11 +28,13 @@ export const ProfilePage = () => {
   const [getUserInfo, getUserInfoLoading] = useFetch(
     !isMe && apis.getUserInfo,
     {
-      id: userId,
-    },
-    (res) => {
-      // console.log(res);
-      setUserInfo(res);
+      defaultParams: {
+        id: userId,
+      },
+      callback: (res) => {
+        // console.log(res);
+        setUserInfo(res);
+      },
     },
   );
   useDeepCompareEffect(() => {

@@ -104,12 +104,9 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
   );
 
   // 删除评论api
-  const [deleteComment] = useFetch(
-    apis.deleteArticleComment,
-    undefined,
-    undefined,
-    { showSuccessMessage: true },
-  );
+  const [deleteComment] = useFetch(apis.deleteArticleComment, {
+    requestOptions: { showSuccessMessage: true },
+  });
 
   /**
    * 监听删除评论

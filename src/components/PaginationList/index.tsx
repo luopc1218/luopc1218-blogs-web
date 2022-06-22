@@ -34,13 +34,15 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     return data && data.list.length >= data.totalCount;
   }, [data]);
 
-  const [getData, getDataLoading] = useFetch(api, {}, (res) => {
-    setData((oldValue) => {
-      if (!oldValue) return res;
-      const newValue = { ...oldValue };
-      newValue.list = [...oldValue?.list, ...res.list];
-      return newValue;
-    });
+  const [getData, getDataLoading] = useFetch(api, {
+    callback(res) {
+      setData((oldValue) => {
+        if (!oldValue) return res;
+        const newValue = { ...oldValue };
+        newValue.list = [...oldValue?.list, ...res.list];
+        return newValue;
+      });
+    },
   });
 
   useEffect(() => {

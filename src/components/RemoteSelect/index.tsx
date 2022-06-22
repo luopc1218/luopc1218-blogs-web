@@ -17,11 +17,10 @@ export const RemoteSelect: React.FC<RemoteSelectProps> = ({
   valueName,
   ...rest
 }) => {
-  const [optionList, getOptionListLoading] = useFetchData<any[]>(
-    api,
+  const [optionList, getOptionListLoading] = useFetchData<any[]>(api, {
     params,
-    [],
-  );
+    defaultValues: [],
+  });
 
   return (
     <Select
@@ -29,6 +28,7 @@ export const RemoteSelect: React.FC<RemoteSelectProps> = ({
       loading={getOptionListLoading}
       allowClear
       className={styles.remoteSelect}
+      optionFilterProp="label"
       options={optionList?.map((option) => {
         return {
           label: option[keyName],

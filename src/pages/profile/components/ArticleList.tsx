@@ -9,7 +9,7 @@ import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
 import { Button, Modal, Space, Tag } from 'antd';
 import { useRef } from 'react';
-import { Link } from 'umi';
+import { Link, ModelMap, UserModelState, useSelector } from 'umi';
 
 export interface ArticleListProps {
   isMe: boolean;
@@ -17,6 +17,10 @@ export interface ArticleListProps {
 
 export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
   const tableRef = useRef<RemoteTableImperativeHandle>(null);
+
+  const userStateModel: UserModelState = useSelector(
+    (state: ModelMap) => state.user,
+  );
 
   const [deleteArticle] = useFetch(apis.deleteArticle);
 
@@ -67,13 +71,14 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
                   mode="multiple"
                   keyName="name"
                   valueName="id"
-                  placeholder="请选择类型"
+                  placeholder="请选择标签"
                 />
               );
             },
           },
         ]}
         api={apis.getArticleList}
+        params={{ authorId: userStateModel.userInfo?.id }}
         rowKey="id"
         columns={[
           {
@@ -119,10 +124,14 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
             render(row) {
               return (
                 <Space>
-                  <Button type="link">查看</Button>
+                  <Link to={`/article?id=${row.id}`}>
+                    <Button type="link">查看</Button>
+                  </Link>
                   {isMe && (
                     <>
-                      <Button type="link">编辑</Button>
+                      <Link to={`/article/edit?articleId=${row.id}`}>
+                        <Button type="link">编辑</Button>
+                      </Link>
                       <Button
                         type="link"
                         danger

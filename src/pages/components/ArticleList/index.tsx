@@ -14,7 +14,7 @@ export interface ArticleListProps {
   className?: string;
 }
 
-export const ArticleList: React.FC<ArticleListProps> = ({ words }) => {
+export const ArticleList: React.FC<ArticleListProps> = ({}) => {
   const [articles, setArticles] = useState<ListResponse | undefined>(undefined);
 
   return (

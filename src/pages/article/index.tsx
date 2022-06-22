@@ -16,7 +16,7 @@ export const ArticlePage: React.FC = () => {
   const [articleInfo, getArticleInfoLoading] = useFetchData<Article>(
     apis.getArticleInfo,
     {
-      id: articleId,
+      params: { id: articleId },
     },
   );
   const userModelState: UserModelState = useSelector(

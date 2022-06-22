@@ -14,7 +14,7 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
   const articleId = useMemo(() => articleInfo.id, [articleInfo]);
   const [articleFeedback, getArticleFeedbackLoading, getArticleFeedback] =
     useFetchData<ArticleFeedback>(apis.getArticleFeedback, {
-      articleId,
+      params: { articleId },
     });
   usePage({
     pagePath: [
@@ -27,13 +27,14 @@ export const Feedback: React.FC<FeedbackProps> = ({ articleInfo }) => {
 
   const [toggleArticleLike, toggleArticleLikeLoading] = useFetch(
     apis.toggleArticleLike,
-    {},
-    (res) => {
-      if (res) {
-        getArticleFeedback({
-          articleId,
-        });
-      }
+    {
+      callback: (res) => {
+        if (res) {
+          getArticleFeedback({
+            articleId,
+          });
+        }
+      },
     },
   );
 

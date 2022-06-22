@@ -35,13 +35,10 @@ export const ArticleCommentItem: React.FC<ArticleCommentItemProps> = ({
   const [showReply, setShowReply] = useState(false);
 
   const [commentReplyList, getCommentReplyListLoading, getCommentReplyList] =
-    useFetchData(
-      showReply && apis.getArticleCommentReplyList,
-      {
-        commentId: commentInfo.id,
-      },
-      [],
-    );
+    useFetchData(showReply && apis.getArticleCommentReplyList, {
+      params: { commentId: commentInfo.id },
+      defaultValues: [],
+    });
 
   const [replyingComment, setReplyingComment] = useState<
     { id: number; to?: number | undefined; toName: string } | undefined
