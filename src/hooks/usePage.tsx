@@ -1,6 +1,6 @@
 import type { ModelMap, UserModelState } from 'umi';
 import { useDispatch, useHistory, useSelector } from 'umi';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useDeepCompareEffect } from 'use-deep-compare';
 
 interface UsePageProps {
   pagePath: { path: string; title: string }[];

@@ -9,7 +9,7 @@ import type { ArticleComment } from '@/types/article';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
 import { Avatar, Card, Divider, Space } from 'antd';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import type { ModelMap, UserModelState } from 'umi';
 import { Link, useSelector } from 'umi';
 import ReplyDrawerInputer from './ArticleCommentReplyDrawerInputer';
@@ -48,27 +48,23 @@ export const ArticleCommentItem: React.FC<ArticleCommentItemProps> = ({
     apis.addArticleCommentReply,
   );
 
-  const handleSendCommentReply = useCallback(
-    async (content: string) => {
-      await sendCommentReply({
-        commentId: replyingComment?.id,
-        to: replyingComment?.to || null,
-        content,
-      });
-      setReplyingComment(undefined);
+  const handleSendCommentReply = async (content: string) => {
+    await sendCommentReply({
+      commentId: replyingComment?.id,
+      to: replyingComment?.to || null,
+      content,
+    });
+    setReplyingComment(undefined);
 
-      if (!showReply) {
-        setShowReply(true);
-      } else {
-        getCommentReplyList({
-          commentId: commentInfo.id,
-        });
-      }
-      onReply(commentInfo.id);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [commentInfo.id, replyingComment?.id, showReply],
-  );
+    if (!showReply) {
+      setShowReply(true);
+    } else {
+      getCommentReplyList({
+        commentId: commentInfo.id,
+      });
+    }
+    onReply(commentInfo.id);
+  };
 
   return (
     <Card hoverable key={commentInfo.id} style={{ cursor: 'auto' }}>

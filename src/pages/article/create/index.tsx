@@ -10,7 +10,7 @@ import { Button, Form, Input } from 'antd';
 import { useMemo } from 'react';
 import type { ModelMap, UserModelState } from 'umi';
 import { useHistory, useSelector } from 'umi';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useDeepCompareEffect } from 'use-deep-compare';
 import styles from './index.less';
 
 export interface ArticleCreatePageProps {}
@@ -103,7 +103,7 @@ export const ArticleCreatePage: React.FC<ArticleCreatePageProps> = ({}) => {
           </Form.Item>
           <Form.Item name="tags" label="标签">
             <RemoteSelect
-              mode="tags"
+              mode="multiple"
               api={apis.getArticleTagList}
               keyName="name"
               valueName="id"

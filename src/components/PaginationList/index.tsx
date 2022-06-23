@@ -2,7 +2,7 @@ import { useFetch, usePagination } from '@/hooks';
 import type { ListResponse } from '@/types/response';
 import type { Api } from '@/utils/apis';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useDeepCompareEffect } from 'use-deep-compare';
 import LoadingContainer from '../LoadingContainer';
 
 export interface PaginationListProps {
@@ -40,15 +40,11 @@ export const PaginationList: React.FC<PaginationListProps> = ({
         if (!oldValue) return res;
         const newValue = { ...oldValue };
         newValue.list = [...oldValue?.list, ...res.list];
+        onDataChange(newValue);
         return newValue;
       });
     },
   });
-
-  useEffect(() => {
-    onDataChange(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   const handleFetchData = () => {
     getData({ ...pagination, ...params });
@@ -95,7 +91,6 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getDataLoading]);
 
   return (

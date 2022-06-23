@@ -107,6 +107,10 @@ export const apis: Record<string, Api> = {
     url: '/api/article/getArticleTagList',
     method: 'GET',
   },
+  saveArticle: {
+    url: '/api/article/saveArticle',
+    method: 'POST',
+  },
   deleteArticle: {
     url: '/api/article/deleteArticle',
     method: 'POST',

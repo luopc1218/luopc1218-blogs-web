@@ -1,6 +1,6 @@
 import type { Api } from '@/utils/apis';
 import { useState } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useDeepCompareCallback, useDeepCompareEffect } from 'use-deep-compare';
 import type { UseFetchOptions } from './useFetch';
 import useFetch from './useFetch';
 
@@ -24,15 +24,18 @@ export const useFetchData = <T = any,>(
 
   const [getData, getDataLoading] = useFetch(api, options?.fetchOptions);
 
-  const handleGetData = (newParams: any) => {
-    getData(newParams).then((res) => {
-      if (options?.interceptor) {
-        setData(options?.interceptor(res));
-      } else {
-        setData(res);
-      }
-    });
-  };
+  const handleGetData = useDeepCompareCallback(
+    (newParams: any) => {
+      getData(newParams).then((res) => {
+        if (options?.interceptor) {
+          setData(options?.interceptor(res));
+        } else {
+          setData(res);
+        }
+      });
+    },
+    [options],
+  );
   useDeepCompareEffect(() => {
     if (api) {
       handleGetData(options?.params);
