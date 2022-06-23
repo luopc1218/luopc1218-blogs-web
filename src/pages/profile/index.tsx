@@ -9,14 +9,14 @@ import { Button, Descriptions, message, Modal, Space, Tabs } from 'antd';
 import { useMemo, useState } from 'react';
 import type { UserModelState } from 'umi';
 import { useDispatch, useSelector } from 'umi';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useDeepCompareEffect } from 'use-deep-compare';
 import { ArticleList, MyCollect } from './components';
 import styles from './index.less';
 
 export const ProfilePage = () => {
   const [urlParams, setUrlParams] = useUrlParams();
 
-  const { userId, tab = 'setting' } = urlParams;
+  const { userId, tab } = urlParams;
 
   const userModelState: UserModelState = useSelector<ModelMap, UserModelState>(
     (state: ModelMap) => state.user,
@@ -32,7 +32,6 @@ export const ProfilePage = () => {
         id: userId,
       },
       callback: (res) => {
-        // console.log(res);
         setUserInfo(res);
       },
     },
@@ -43,7 +42,6 @@ export const ProfilePage = () => {
     } else {
       getUserInfo();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMe, userModelState]);
 
   const dispatch = useDispatch();
@@ -148,7 +146,7 @@ export const ProfilePage = () => {
               <ArticleList isMe={isMe} />
             </Tabs.TabPane>
             {isMe && (
-              <Tabs.TabPane key="myCollect" tab="我的收藏">
+              <Tabs.TabPane tab="我的收藏" key="myCollect">
                 <MyCollect />
               </Tabs.TabPane>
             )}

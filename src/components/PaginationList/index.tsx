@@ -1,8 +1,8 @@
 import { useFetch, usePagination } from '@/hooks';
 import type { ListResponse } from '@/types/response';
 import type { Api } from '@/utils/apis';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDeepCompareEffect } from 'use-deep-compare';
 import LoadingContainer from '../LoadingContainer';
 
 export interface PaginationListProps {
@@ -47,8 +47,7 @@ export const PaginationList: React.FC<PaginationListProps> = ({
 
   useEffect(() => {
     onDataChange(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [data, onDataChange]);
 
   const handleFetchData = () => {
     getData({ ...pagination, ...params });
@@ -70,23 +69,26 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     }
   }, [pagination]);
 
-  const handleTouchGround = () => {
+  const handleTouchGround = useCallback(() => {
     if (!noMoreData) {
       setPagination(pagination.page + 1);
     }
-  };
+  }, [noMoreData, pagination.page, setPagination]);
 
-  const handleScroll = (e: any) => {
-    const listElement: HTMLDivElement | null = listRef.current;
-    const bodyElement = e.target.documentElement;
+  const handleScroll = useCallback(
+    (e: any) => {
+      const listElement: HTMLDivElement | null = listRef.current;
+      const bodyElement = e.target.documentElement;
 
-    if (
-      listElement &&
-      listElement.getBoundingClientRect()?.bottom < bodyElement.clientHeight
-    ) {
-      handleTouchGround();
-    }
-  };
+      if (
+        listElement &&
+        listElement.getBoundingClientRect()?.bottom < bodyElement.clientHeight
+      ) {
+        handleTouchGround();
+      }
+    },
+    [handleTouchGround],
+  );
 
   useEffect(() => {
     if (!getDataLoading) {
@@ -95,8 +97,7 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getDataLoading]);
+  }, [getDataLoading, handleScroll]);
 
   return (
     <LoadingContainer
