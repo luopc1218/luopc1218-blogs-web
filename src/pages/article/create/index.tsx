@@ -1,9 +1,4 @@
-import {
-  ColumnSpace,
-  LoadingContainer,
-  RemoteSelect,
-  RichTextEditor,
-} from '@/components';
+import { ColumnSpace, LoadingContainer, RichTextEditor } from '@/components';
 import { useFetch, useFetchData, usePage, useUrlParams } from '@/hooks';
 import apis from '@/utils/apis';
 import { Button, Form, Input } from 'antd';
@@ -11,6 +6,7 @@ import { useMemo } from 'react';
 import type { ModelMap, UserModelState } from 'umi';
 import { useHistory, useSelector } from 'umi';
 import { useDeepCompareEffect } from 'use-deep-compare';
+import ArticleTagSelector from '../components/ArticleTagSelector';
 import styles from './index.less';
 
 export interface ArticleCreatePageProps {}
@@ -90,6 +86,9 @@ export const ArticleCreatePage: React.FC<ArticleCreatePageProps> = ({}) => {
         <Form
           form={form}
           onFinish={editMode ? handleSaveCreateArticle : handleCreateArticle}
+          initialValues={{
+            newTags: [],
+          }}
         >
           <Form.Item name="title" label="标题" rules={[{ required: true }]}>
             <Input />
@@ -101,15 +100,37 @@ export const ArticleCreatePage: React.FC<ArticleCreatePageProps> = ({}) => {
           >
             <Input />
           </Form.Item>
-          <Form.Item name="tags" label="标签">
-            <RemoteSelect
+          <Form.Item
+            label="标签"
+            shouldUpdate={(preValues, afterValues) => {
+              return (
+                preValues.newTags?.join(',') !== afterValues.newTags?.join(',')
+              );
+            }}
+          >
+            {({ getFieldValue, setFieldsValue }) => {
+              const newTags = getFieldValue('newTags');
+              return (
+                <Form.Item name="tags">
+                  <ArticleTagSelector
+                    defaultNewTagList={newTags}
+                    onNewTagListChange={(value) =>
+                      setFieldsValue({ newTags: value })
+                    }
+                  />
+                </Form.Item>
+              );
+            }}
+            {/* <RemoteSelect
               mode="multiple"
               api={apis.getArticleTagList}
               keyName="name"
               valueName="id"
-            />
+            /> */}
           </Form.Item>
-
+          <Form.Item name="newTags" hidden>
+            {/* <Select mode="tags" /> */}
+          </Form.Item>
           <Form.Item
             name="content"
             rules={[{ required: true, message: '请输入文章内容' }]}

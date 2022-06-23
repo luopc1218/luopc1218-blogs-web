@@ -54,8 +54,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
               return (
                 <RemoteSelect
                   api={apis.getArticleTypeList}
-                  keyName="name"
-                  valueName="id"
+                  fieldNames={{ label: 'name', value: 'id' }}
                   placeholder="请选择类型"
                 />
               );
@@ -69,8 +68,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
                 <RemoteSelect
                   api={apis.getArticleTagList}
                   mode="multiple"
-                  keyName="name"
-                  valueName="id"
+                  fieldNames={{ label: 'name', value: 'id' }}
                   placeholder="请选择标签"
                 />
               );
