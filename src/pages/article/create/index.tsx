@@ -103,7 +103,7 @@ export const ArticleCreatePage: React.FC<ArticleCreatePageProps> = ({}) => {
           </Form.Item>
           <Form.Item name="tags" label="标签">
             <RemoteSelect
-              mode="tags"
+              mode="multiple"
               api={apis.getArticleTagList}
               keyName="name"
               valueName="id"
