@@ -34,7 +34,7 @@ export const useFetchData = <T = any,>(
         }
       });
     },
-    [getData, options],
+    [options],
   );
   useDeepCompareEffect(() => {
     if (api) {

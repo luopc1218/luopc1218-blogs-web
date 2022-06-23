@@ -2,13 +2,8 @@ import { useFetch, usePagination } from '@/hooks';
 import type { ListResponse } from '@/types/response';
 import type { Api } from '@/utils/apis';
 import { Pagination, Table, TableProps } from 'antd';
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { useDeepCompareCallback } from 'use-deep-compare';
 import ColumnSpace from '../ColumnSpace';
 import type { RemoteQueryFormItem } from '../RemoteQueryForm';
 import RemoteQueryForm from '../RemoteQueryForm';
@@ -48,19 +43,19 @@ export const RemoteTable = forwardRef<
         if (res) setTableData(res);
       });
     } else {
+      setPagination(1);
     }
-    setPagination(1);
   };
 
-  const handleGetTableData = useCallback(() => {
+  const handleGetTableData = useDeepCompareCallback(() => {
     getTableData({ ...params, ...query, page, pageSize }).then((res) => {
       if (res) setTableData(res);
     });
-  }, [getTableData, page, pageSize, params, query]);
+  }, [params, query, page, pageSize]);
 
   useEffect(() => {
     handleGetTableData();
-  }, [handleGetTableData, page, pageSize]);
+  }, [page, pageSize]);
 
   useImperativeHandle(ref, () => {
     return {

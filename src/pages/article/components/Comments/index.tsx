@@ -5,7 +5,7 @@ import type { ArticleComment } from '@/types/article';
 import apis from '@/utils/apis';
 import { Button, Modal } from 'antd';
 import 'quill/dist/quill.snow.css';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import type { ModelMap, UserModelState } from 'umi';
 import { useSelector } from 'umi';
 import ArticleCommentItem from './ArticleCommentItem';
@@ -71,37 +71,33 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
    * 监听切换评论点赞状态
    * @param commentId 评论id
    */
-  const handleToogleCommentLike = useCallback(
-    (commentId: number) => {
-      if (toggleCommentLikeLoading) return;
-      toggleCommentLike({
-        commentId,
-      }).then((res) => {
-        if (!res) return;
-        setCommentList((oldValue) => {
-          const newValue = { ...oldValue };
-          newValue.list = oldValue.list.map((item) => {
-            if (item.id === commentId) {
-              const newLikeStatus = !item.likeStatus;
-              const newLikeCount = newLikeStatus
-                ? item.likeCount + 1
-                : item.likeCount - 1;
-              return {
-                ...item,
-                likeStatus: newLikeStatus,
-                likeCount: newLikeCount,
-              };
-            }
-            return item;
-          });
-
-          return newValue;
+  const handleToogleCommentLike = (commentId: number) => {
+    if (toggleCommentLikeLoading) return;
+    toggleCommentLike({
+      commentId,
+    }).then((res) => {
+      if (!res) return;
+      setCommentList((oldValue) => {
+        const newValue = { ...oldValue };
+        newValue.list = oldValue.list.map((item) => {
+          if (item.id === commentId) {
+            const newLikeStatus = !item.likeStatus;
+            const newLikeCount = newLikeStatus
+              ? item.likeCount + 1
+              : item.likeCount - 1;
+            return {
+              ...item,
+              likeStatus: newLikeStatus,
+              likeCount: newLikeCount,
+            };
+          }
+          return item;
         });
-      });
-    },
 
-    [toggleCommentLikeLoading],
-  );
+        return newValue;
+      });
+    });
+  };
 
   // 删除评论api
   const [deleteComment] = useFetch(apis.deleteArticleComment, {
@@ -112,7 +108,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
    * 监听删除评论
    * @param commentId 评论id
    */
-  const handleDeleteComment = useCallback((commentId: number) => {
+  const handleDeleteComment = (commentId: number) => {
     Modal.confirm({
       type: 'warning',
       content: '确认删除这条评论？',
@@ -135,7 +131,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
         danger: true,
       },
     });
-  }, []);
+  };
 
   const [getCommentReplyCount] = useFetch<number>(
     apis.getArticleCommentReplyCount,
@@ -145,7 +141,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
    * 监听回复评论
    * @param commentId 评论id
    */
-  const handleCommentReply = useCallback(async (commentId: number) => {
+  const handleCommentReply = async (commentId: number) => {
     const replyCount = await getCommentReplyCount({
       commentId,
     });
@@ -158,7 +154,7 @@ export const Comments: React.FC<CommentsProps> = ({ articleId }) => {
         return newValue;
       });
     }
-  }, []);
+  };
 
   return (
     <div className={`${styles.comments} module`}>

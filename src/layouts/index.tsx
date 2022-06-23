@@ -25,7 +25,7 @@ export const LayoutContainer: React.FC = ({ children }) => {
     dispatch({
       type: 'user/checkSignIn',
     });
-  }, [dispatch, modal]);
+  }, [modal]);
 
   ConfigProvider.config({
     theme: {

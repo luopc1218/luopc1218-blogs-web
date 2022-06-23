@@ -1,7 +1,7 @@
 import { useFetch, usePagination } from '@/hooks';
 import type { ListResponse } from '@/types/response';
 import type { Api } from '@/utils/apis';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDeepCompareEffect } from 'use-deep-compare';
 import LoadingContainer from '../LoadingContainer';
 
@@ -40,14 +40,11 @@ export const PaginationList: React.FC<PaginationListProps> = ({
         if (!oldValue) return res;
         const newValue = { ...oldValue };
         newValue.list = [...oldValue?.list, ...res.list];
+        onDataChange(newValue);
         return newValue;
       });
     },
   });
-
-  useEffect(() => {
-    onDataChange(data);
-  }, [data, onDataChange]);
 
   const handleFetchData = () => {
     getData({ ...pagination, ...params });
@@ -69,26 +66,23 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     }
   }, [pagination]);
 
-  const handleTouchGround = useCallback(() => {
+  const handleTouchGround = () => {
     if (!noMoreData) {
       setPagination(pagination.page + 1);
     }
-  }, [noMoreData, pagination.page, setPagination]);
+  };
 
-  const handleScroll = useCallback(
-    (e: any) => {
-      const listElement: HTMLDivElement | null = listRef.current;
-      const bodyElement = e.target.documentElement;
+  const handleScroll = (e: any) => {
+    const listElement: HTMLDivElement | null = listRef.current;
+    const bodyElement = e.target.documentElement;
 
-      if (
-        listElement &&
-        listElement.getBoundingClientRect()?.bottom < bodyElement.clientHeight
-      ) {
-        handleTouchGround();
-      }
-    },
-    [handleTouchGround],
-  );
+    if (
+      listElement &&
+      listElement.getBoundingClientRect()?.bottom < bodyElement.clientHeight
+    ) {
+      handleTouchGround();
+    }
+  };
 
   useEffect(() => {
     if (!getDataLoading) {
@@ -97,7 +91,7 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [getDataLoading, handleScroll]);
+  }, [getDataLoading]);
 
   return (
     <LoadingContainer

@@ -1,5 +1,5 @@
 import { parseJsonToUrl, parseUrlToJson } from '@/utils';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useHistory } from 'umi';
 
 type UrlParams = Record<string, string>;
@@ -12,15 +12,13 @@ export const useUrlParams = (): [UrlParams, any, string] => {
     () => (!!search ? parseUrlToJson(search) : {}),
     [search],
   );
-  const setUrlParams = useCallback(
-    (obj, overwrite = false) => {
-      const newUrlParams = parseJsonToUrl(
-        overwrite ? obj : { ...urlParams, ...obj },
-      );
-      history.replace(pathname + '?' + newUrlParams);
-    },
-    [history, pathname, urlParams],
-  );
+  const setUrlParams = (obj: any, overwrite = false) => {
+    const newUrlParams = parseJsonToUrl(
+      overwrite ? obj : { ...urlParams, ...obj },
+    );
+    history.replace(pathname + '?' + newUrlParams);
+  };
+
   return [urlParams, setUrlParams, pathname];
 };
 export default useUrlParams;
