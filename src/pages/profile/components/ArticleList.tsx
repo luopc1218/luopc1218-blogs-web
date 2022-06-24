@@ -1,15 +1,12 @@
-import {
-  ColumnSpace,
-  RemoteSelect,
-  RemoteTable,
-  RemoteTableImperativeHandle,
-} from '@/components';
+import type { RemoteTableImperativeHandle } from '@/components';
+import { ColumnSpace, RemoteSelect, RemoteTable } from '@/components';
 import { useFetch, useUrlParams } from '@/hooks';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
 import { Button, Modal, Space, Tag } from 'antd';
 import { useRef } from 'react';
-import { Link, ModelMap, UserModelState, useSelector } from 'umi';
+import type { ModelMap, UserModelState } from 'umi';
+import { Link, useSelector } from 'umi';
 
 export interface ArticleListProps {
   isMe: boolean;
@@ -29,13 +26,17 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
   const handleDeleteArticle = (articleId: number) => {
     Modal.confirm({
       type: 'warning',
-      content: '确认删除这条评论？',
-      onOk() {
-        return deleteArticle({
+      content: '确定要删除这篇文章吗？',
+      async onOk() {
+        const res = await deleteArticle({
           articleId,
-        }).then((res) => {
-          if (res) tableRef.current?.refresh();
         });
+        if (res) {
+          tableRef.current?.refresh();
+          return Promise.resolve();
+        } else {
+          return Promise.reject();
+        }
       },
     });
   };
@@ -62,20 +63,20 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
               );
             },
           },
-          {
-            name: 'tags',
-            label: '标签',
-            render: () => {
-              return (
-                <RemoteSelect
-                  api={apis.getArticleTagList}
-                  mode="multiple"
-                  fieldNames={{ label: 'name', value: 'id' }}
-                  placeholder="请选择标签"
-                />
-              );
-            },
-          },
+          // {
+          //   name: 'tags',
+          //   label: '标签',
+          //   render: () => {
+          //     return (
+          //       <RemoteSelect
+          //         api={apis.getArticleTagList}
+          //         mode="multiple"
+          //         fieldNames={{ label: 'name', value: 'id' }}
+          //         placeholder="请选择标签"
+          //       />
+          //     );
+          //   },
+          // },
         ]}
         api={apis.getArticleList}
         params={{ authorId: userId || userStateModel.userInfo?.id }}

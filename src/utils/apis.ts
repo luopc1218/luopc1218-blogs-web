@@ -115,6 +115,14 @@ export const apis: Record<string, Api> = {
     url: '/api/article/deleteArticle',
     method: 'POST',
   },
+  getCollectedArticleList: {
+    url: '/api/article/getCollectedArticleList',
+    method: 'GET',
+  },
+  cancelArticleCollect: {
+    url: '/api/article/cancelArticleCollect',
+    method: 'POST',
+  },
 };
 
 export default apis;
