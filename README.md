@@ -24,4 +24,5 @@ Build
 
 ```bash
 $ npm run build
+$ npm run docker:build
 ```
