@@ -1,53 +1,33 @@
+import { useModifySetState } from '@/hooks';
 import { noticeService } from '@/services/notice';
-import type { Model } from './index';
+import { useState } from 'react';
 
-export interface NoticeModelState {
+export interface NoticeState {
   noticeDrawerVisible: boolean;
   unreadNoticeCount: number;
 }
 
-export const NoticeModel: Model<NoticeModelState> = {
-  namespace: 'notice',
-  state: {
+export default () => {
+  const [state, setState] = useState({
     noticeDrawerVisible: false,
     unreadNoticeCount: 0,
-  },
-  reducers: {
-    setNoticeDrawerVisible(state, { payload }) {
-      state.noticeDrawerVisible = payload;
-    },
-    setUnreadNoticeCount(state, { payload }) {
-      state.unreadNoticeCount = payload;
-    },
-  },
-  effects: {
-    *openNoticeDrawer({}, { put }) {
-      yield put({
-        type: 'setNoticeDrawerVisible',
-        payload: true,
-      });
-    },
-    *closeNoticeDrawer({}, { put }) {
-      yield put({
-        type: 'setNoticeDrawerVisible',
-        payload: false,
-      });
-    },
-    *getUnreadNoticeCount({}, { put }) {
-      try {
-        const unreadNoticeCount = yield noticeService.getUnreadNoticeCount();
-        yield put({
-          type: 'setUnreadNoticeCount',
-          payload: unreadNoticeCount,
-        });
-      } catch (error) {
-        yield put({
-          type: 'setUnreadNoticeCount',
-          payload: 0,
-        });
-      }
-    },
-  },
-};
+  });
 
-export default NoticeModel;
+  const modifySetState = useModifySetState(setState);
+
+  const openNoticeDrawer = () => {
+    modifySetState('noticeDrawerVisible', true);
+  };
+  const closeNoticeDrawer = () => {
+    modifySetState('noticeDrawerVisible', false);
+  };
+  const getUnreadNoticeCount = async () => {
+    try {
+      const unreadNoticeCount = await noticeService.getUnreadNoticeCount();
+      modifySetState('unreadNoticeCount', unreadNoticeCount);
+    } catch (error) {
+      modifySetState('unreadNoticeCount', 0);
+    }
+  };
+  return { state, openNoticeDrawer, closeNoticeDrawer, getUnreadNoticeCount };
+};

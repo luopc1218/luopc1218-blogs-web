@@ -1,11 +1,11 @@
 import { parseJsonToUrl, parseUrlToJson } from '@/utils';
 import { useMemo } from 'react';
-import { useHistory } from 'umi';
+import { history } from 'umi';
 
 type UrlParams = Record<string, string>;
 
 export const useUrlParams = (): [UrlParams, any, string] => {
-  const history = useHistory();
+  ;
   const { search, pathname } = history.location;
 
   const urlParams: UrlParams = useMemo(

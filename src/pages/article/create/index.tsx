@@ -4,7 +4,7 @@ import apis from '@/utils/apis';
 import { Button, Form, Input } from 'antd';
 import { useMemo } from 'react';
 import type { ModelMap, UserModelState } from 'umi';
-import { useHistory, useSelector } from 'umi';
+import { history, useSelector } from 'umi';
 import { useDeepCompareEffect } from 'use-deep-compare';
 import ArticleTagSelector from '../components/ArticleTagSelector';
 import styles from './index.less';
@@ -54,7 +54,7 @@ export const ArticleCreatePage: React.FC<ArticleCreatePageProps> = ({}) => {
     siderVisible: false,
   });
 
-  const history = useHistory();
+  ;
 
   const [createArticle, createArticleLoading] = useFetch<number>(
     apis.createArticle,

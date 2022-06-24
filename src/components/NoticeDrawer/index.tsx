@@ -1,5 +1,5 @@
+import type { ModelMap, NoticeModelState } from '@/models';
 import { Drawer } from 'antd';
-import type { ModelMap, NoticeModelState } from 'umi';
 import { useDispatch, useSelector } from 'umi';
 import LoadingContainer from '../LoadingContainer';
 import styles from './index.less';

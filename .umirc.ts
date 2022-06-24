@@ -1,20 +1,14 @@
-import { defineConfig } from 'umi';
+import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
-  title: false,
-  nodeModulesTransform: {
-    type: 'none',
-  },
-  fastRefresh: {},
   antd: {
-    disableBabelPluginImport: true,
+    // babel-plugin-import
+    import: false,
   },
+  model: {},
   mfsu: false,
-  dva: {
-    immer: true,
-    hmr: true,
-    lazyLoad: true,
-  },
+  request: {},
+  dva: {},
   lessLoader: {
     // 通过globalVars在每个less文件头引入antd定义的variable.less文件，里面有less变量和css变量
     // 相关的映射

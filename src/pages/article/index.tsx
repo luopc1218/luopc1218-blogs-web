@@ -9,7 +9,7 @@ import {
   GlobalModelState,
   Link,
   ModelMap,
-  useHistory,
+  history,
   UserModelState,
   useSelector,
 } from 'umi';
@@ -17,7 +17,7 @@ import { Comments, Feedback } from './components';
 import styles from './index.less';
 
 export const ArticlePage: React.FC = () => {
-  const history = useHistory();
+  ;
   const [urlParams] = useUrlParams();
   const articleId = useMemo(() => urlParams.id, [urlParams.id]);
   const [articleInfo, getArticleInfoLoading] = useFetchData<Article>(

@@ -1,73 +1,34 @@
-import type { Effect, ImmerReducer, NoticeModelState } from 'umi';
-import type { UserModelState } from './user';
+import { useModifySetState } from '@/hooks';
+import { useCallback, useState } from 'react';
+import { useDeepCompareCallback } from 'use-deep-compare';
 
-export interface Model<T> {
-  namespace?: string;
-  state?: T;
-  effects?: Record<string, Effect>;
-  reducers?: Record<string, ImmerReducer<T>>;
-}
-
-export interface ModelMap {
-  global: GlobalModelState;
-  user: UserModelState;
-  notice: NoticeModelState;
-}
-
-export interface GlobalModelState {
-  titlePath: { title: string; path: string }[];
+export interface GlobalState {
+  pagePath: { title: string; path: string }[];
   sysConfig: any;
   theme: string;
   siderVisible: boolean;
 }
 
-export const globalModel: Model<GlobalModelState> = {
-  namespace: 'global',
-  state: {
-    titlePath: [],
+export default () => {
+  const [state, setState] = useState<GlobalState>({
+    pagePath: [],
     sysConfig: {
       title: 'luopc1218blogs',
     },
     theme: localStorage.getItem('theme') || '',
     siderVisible: true,
-  },
-  reducers: {
-    setPagePath(state, { payload }) {
-      state.titlePath = payload;
-      return state;
-    },
-    setSysConfig(state, { payload }) {
-      state.sysConfig = payload;
-      return state;
-    },
-    setTheme(state, { payload }) {
-      state.theme = payload;
-    },
-    setEnableSider(state, { payload }) {
-      state.siderVisible = payload;
-    },
-  },
-  effects: {
-    *changePagePath({ payload }, { put }) {
-      yield put({
-        type: 'setPagePath',
-        payload,
-      });
-    },
-    *changeTheme({ payload }, { put }) {
-      localStorage.setItem('theme', payload);
-      yield put({
-        type: 'setTheme',
-        payload: payload,
-      });
-    },
-    *changeEnableSider({ payload }, { put }) {
-      yield put({
-        type: 'setEnableSider',
-        payload,
-      });
-    },
-  },
-};
+  });
 
-export default globalModel;
+  const modifySetState = useModifySetState(setState);
+
+  const changePagePath = useCallback((pagePath: any[]) => {
+    modifySetState('pagePath', pagePath);
+  }, []);
+  const changeTheme = useCallback((theme: string) => {
+    modifySetState('theme', theme);
+  }, []);
+  const changeEnableSider = useDeepCompareCallback(() => {
+    modifySetState('siderVisible', !state.siderVisible);
+  }, [state.siderVisible]);
+  return { state, changePagePath, changeTheme, changeEnableSider };
+};

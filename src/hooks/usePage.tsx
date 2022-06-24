@@ -1,5 +1,5 @@
 import type { ModelMap, UserModelState } from 'umi';
-import { useDispatch, useHistory, useSelector } from 'umi';
+import { useDispatch, history, useSelector } from 'umi';
 import { useDeepCompareEffect } from 'use-deep-compare';
 
 interface UsePageProps {
@@ -10,7 +10,7 @@ interface UsePageProps {
 
 export const usePage = (props: UsePageProps) => {
   const { pagePath = [], siderVisible = true, signInRequire = false } = props;
-  const history = useHistory();
+  ;
   const userModelState: UserModelState = useSelector(
     (state: ModelMap) => state.user,
   );

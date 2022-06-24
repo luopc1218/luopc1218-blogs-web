@@ -81,3 +81,16 @@ export const getRandomColor = () => {
   }
   return '#' + hex; //返回‘#'开头16进制颜色
 };
+
+/**
+ * 修改对象的某个字段并返回新的对象
+ * @param object 对象实体
+ * @param key 要修改的字段
+ * @param value 值
+ * @returns 修改后的对象
+ */
+export const objectModification = (object: any, key: string, value: any) => {
+  const newObject = { ...object };
+  newObject[key] = value;
+  return newObject;
+};

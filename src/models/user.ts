@@ -1,6 +1,7 @@
+import { useModifySetState } from '@/hooks';
 import { UserService } from '@/services/user';
-import type { User } from '@/types/user';
-import type { Model } from './index';
+import { User } from '@/types/user';
+import { useState } from 'react';
 
 export interface UserModelState {
   checkSignInLoading: boolean;
@@ -8,114 +9,84 @@ export interface UserModelState {
   userInfo: User | undefined;
 }
 
-export const userModel: Model<UserModelState> = {
-  namespace: 'user',
-  state: {
+export default () => {
+  const [state, setState] = useState({
     checkSignInLoading: false,
     getUserInfoLoading: false,
     userInfo: undefined,
-  },
-  reducers: {
-    setUserInfo(state, { payload }) {
-      return { ...state, userInfo: payload };
-    },
-    setCheckSignInLoading(state, { payload }) {
-      return { ...state, checkSignInLoading: payload };
-    },
-    setGetUserInfoLoading(state, { payload }) {
-      return { ...state, getUserInfoLoading: payload };
-    },
-  },
-  effects: {
-    *signIn({ payload }, { put }) {
-      const { signInFormData, reslove, reject } = payload;
-      try {
-        yield UserService.signIn(signInFormData);
-        // reslove();
-        // yield put({
-        //   type: 'checkSignIn',
-        //   payload: {
-        //     accessToken,
-        //   },
-        // });
-      } catch (e) {
-        reject();
-      }
-    },
-    *signUp({ payload }) {
-      const { signUpFormData, reslove, reject } = payload;
-      try {
-        yield UserService.signUp(signUpFormData);
-        reslove();
-      } catch (e) {
-        reject();
-      }
-    },
-    *checkSignIn({}, { put }) {
-      try {
-        yield put({
-          type: 'setCheckSignInLoading',
-          payload: true,
-        });
-        yield UserService.checkSignIn();
-        yield put({
-          type: 'setCheckSignInLoading',
-          payload: false,
-        });
-        yield put({
-          type: 'getUserInfo',
-        });
-      } catch (error) {
-        yield put({
-          type: 'setCheckSignInLoading',
-          payload: false,
-        });
-      }
-    },
-    *getUserInfo({}, { put }) {
-      yield put({
-        type: 'setGetUserInfoLoading',
-        payload: true,
-      });
-      const userInfo = yield UserService.getUserInfo();
-      yield put({
-        type: 'setUserInfo',
-        payload: userInfo,
-      });
-      yield put({
-        type: 'setGetUserInfoLoading',
-        payload: false,
-      });
-    },
-    *signOut() {
-      const accessToken = localStorage.getItem('accessToken');
-      if (accessToken) {
-        localStorage.removeItem('accessToken');
-        location.reload();
-      }
-    },
-    *changeAvatar({ payload }, { put }) {
-      try {
-        yield UserService.changeAvatar(payload);
-        yield put({
-          type: 'getUserInfo',
-        });
-      } catch (error) {}
-    },
-    *changePassword({ payload }, { put }) {
-      const { changePasswordFormData, reslove, reject } = payload;
-      const { password, newPassword } = changePasswordFormData;
-      try {
-        yield UserService.changePassword({ password, newPassword });
-        yield put({
-          type: 'signOut',
-        });
-        reslove();
-      } catch (error) {
-        reject(error);
-      }
-    },
-  },
-};
+  });
 
-export default userModel;
+  const modifySetState = useModifySetState(setState);
+
+  const signIn = async ({ signInFormData, reslove, reject }) => {
+    try {
+      await UserService.signIn(signInFormData);
+      reslove();
+    } catch (e) {
+      reject();
+    }
+  };
+  const signUp = async ({ signUpFormData, reslove, reject }) => {
+    try {
+      await UserService.signUp(signUpFormData);
+      reslove();
+    } catch (e) {
+      reject();
+    }
+  };
+  const checkSignIn = async () => {
+    try {
+      modifySetState('checkSignInLoading', true);
+      await UserService.checkSignIn();
+      modifySetState('checkSignInLoading', false);
+
+      await getUserInfo();
+    } catch (error) {
+      modifySetState('checkSignInLoading', false);
+    }
+  };
+  const getUserInfo = async () => {
+    modifySetState('setGetUserInfoLoading', true);
+    const userInfo = await UserService.getUserInfo();
+    modifySetState('userInfo', userInfo);
+    modifySetState('setGetUserInfoLoading', false);
+  };
+
+  const signOut = () => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      localStorage.removeItem('accessToken');
+      location.reload();
+    }
+  };
+  const changeAvatar = async (avatar) => {
+    try {
+      await UserService.changeAvatar(avatar);
+      await getUserInfo();
+    } catch (error) {}
+  };
+  const changePassword = async ({
+    changePasswordFormData,
+    reslove,
+    reject,
+  }) => {
+    const { password, newPassword } = changePasswordFormData;
+    try {
+      await UserService.changePassword({ password, newPassword });
+      signOut();
+      reslove();
+    } catch (error) {
+      reject(error);
+    }
+  };
+  return {
+    state,
+    signIn,
+    signUp,
+    checkSignIn,
+    getUserInfo,
+    signOut,
+    changeAvatar,
+    changePassword,
+  };
+};

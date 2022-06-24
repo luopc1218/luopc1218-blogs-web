@@ -1,5 +1,5 @@
 import { Avatar, Iconfont } from '@/components';
-import type { ModelMap } from '@/models';
+import type { ModelMap, NoticeModelState, UserModelState } from '@/models';
 import type { User } from '@/types/user';
 import { SearchOutlined } from '@ant-design/icons';
 import {
@@ -16,8 +16,7 @@ import {
 } from 'antd';
 import { useMemo, useState } from 'react';
 import { CirclePicker } from 'react-color';
-import type { NoticeModelState, UserModelState } from 'umi';
-import { Link, useDispatch, useHistory, useSelector } from 'umi';
+import { history, Link, useDispatch, useSelector } from 'umi';
 import type { SignInFormData } from '../FormModal';
 import { FormModal, SignInForm } from '../FormModal';
 import styles from './index.less';
@@ -159,8 +158,6 @@ const HeaderUser: React.FC = () => {
 
 export const Header: React.FC = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
-
   const [searchWords, setSearchWords] = useState('');
   /**
    * 监听搜索

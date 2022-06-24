@@ -1,10 +1,11 @@
 import { Breadcrumb, Footer, Header, NoticeDrawer, Sider } from '@/components';
+import { GlobalModelState, ModelMap } from '@/models';
 import { Affix, ConfigProvider, Layout, Modal } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import 'quill/dist/quill.snow.css';
 import React, { useEffect, useMemo } from 'react';
-import type { GlobalModelState, ModelMap } from 'umi';
-import { Helmet, useDispatch, useSelector } from 'umi';
+import { Outlet, useDispatch, useSelector } from 'umi';
+import {useModel} from '@umijs/max'
 import styles from './index.less';
 
 declare global {
@@ -13,7 +14,7 @@ declare global {
   }
 }
 
-export const LayoutContainer: React.FC = ({ children }) => {
+export const LayoutContainer: React.FC = ({}) => {
   const dispatch = useDispatch();
   const [modal, contextHolder] = Modal.useModal();
   const globalModelState: GlobalModelState = useSelector(
@@ -26,6 +27,8 @@ export const LayoutContainer: React.FC = ({ children }) => {
       type: 'user/checkSignIn',
     });
   }, [modal]);
+
+  console.log(globalModelState);
 
   ConfigProvider.config({
     theme: {
@@ -44,9 +47,9 @@ export const LayoutContainer: React.FC = ({ children }) => {
 
   return (
     <ConfigProvider locale={zhCN}>
-      <Helmet>
+      {/* <Helmet>
         <title>{title}</title>
-      </Helmet>
+      </Helmet> */}
       <Layout className={styles.layout} id="root-layout">
         <Affix offsetTop={0}>
           <Header />
@@ -55,7 +58,9 @@ export const LayoutContainer: React.FC = ({ children }) => {
           <Breadcrumb />
         </div>
         <Layout style={{ padding: '0 1rem' }}>
-          <Layout.Content className={styles.content}>{children}</Layout.Content>
+          <Layout.Content className={styles.content}>
+            <Outlet />
+          </Layout.Content>
           {globalModelState.siderVisible && <Sider />}
         </Layout>
         <Footer />
