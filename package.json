@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "start": "umi dev",
-    "build": "git pull && npm i -prod && umi build",
+    "build": "npm i -prod && umi build",
     "docker:build": "docker build -t luopc1218blogs-web:latest ."
   },
   "gitHooks": {
