@@ -4,7 +4,7 @@ import {
   RemoteTable,
   RemoteTableImperativeHandle,
 } from '@/components';
-import { useFetch } from '@/hooks';
+import { useFetch, useUrlParams } from '@/hooks';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
 import { Button, Modal, Space, Tag } from 'antd';
@@ -21,6 +21,8 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
   const userStateModel: UserModelState = useSelector(
     (state: ModelMap) => state.user,
   );
+
+  const [{ userId }] = useUrlParams();
 
   const [deleteArticle] = useFetch(apis.deleteArticle);
 
@@ -76,7 +78,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({ isMe }) => {
           },
         ]}
         api={apis.getArticleList}
-        params={{ authorId: userStateModel.userInfo?.id }}
+        params={{ authorId: userId || userStateModel.userInfo?.id }}
         rowKey="id"
         columns={[
           {

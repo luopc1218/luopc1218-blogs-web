@@ -6,7 +6,7 @@ export interface Article {
   authorName: string;
   authorAvatarUrl: string;
   content: string;
-  tags: string;
+  tags: ArticleTag[];
   type: number;
   viewCount: number;
   createTime: string;
@@ -33,4 +33,9 @@ export interface ArticleComment {
   likeCount: number;
   likeStatus: boolean;
   time: string;
+}
+
+export interface ArticleTag {
+  id: number;
+  name: string;
 }

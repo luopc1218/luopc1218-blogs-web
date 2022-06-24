@@ -3,9 +3,9 @@ import { useFetchData, useUrlParams } from '@/hooks';
 import type { Article } from '@/types/article';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
-import { Avatar, Space } from 'antd';
+import { Avatar, Space, Tag } from 'antd';
 import { useMemo } from 'react';
-import type { ModelMap, UserModelState } from 'umi';
+import type { GlobalModelState, ModelMap, UserModelState } from 'umi';
 import { Link, useSelector } from 'umi';
 import { Comments, Feedback } from './components';
 import styles from './index.less';
@@ -28,6 +28,10 @@ export const ArticlePage: React.FC = () => {
     [articleInfo?.authorId, userModelState.userInfo?.id],
   );
 
+  const globalModelState: GlobalModelState = useSelector(
+    (state: ModelMap) => state.global,
+  );
+
   return (
     <LoadingContainer
       loading={getArticleInfoLoading}
@@ -36,7 +40,16 @@ export const ArticlePage: React.FC = () => {
     >
       <ColumnSpace>
         <ColumnSpace className="module">
-          <div className={styles.title}>{articleInfo?.title}</div>
+          <Space align="center">
+            <div className={styles.title}>{articleInfo?.title}</div>
+            <div>
+              {articleInfo?.tags.map((item: any) => (
+                <Tag color={globalModelState.theme} key={item.id}>
+                  {item.name}
+                </Tag>
+              ))}
+            </div>
+          </Space>
 
           <div className={styles.description}>{articleInfo?.description}</div>
           <Space>

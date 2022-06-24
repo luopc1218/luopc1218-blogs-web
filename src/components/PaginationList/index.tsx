@@ -37,10 +37,11 @@ export const PaginationList: React.FC<PaginationListProps> = ({
   const [getData, getDataLoading] = useFetch(api, {
     callback(res) {
       setData((oldValue) => {
-        if (!oldValue) return res;
+        if (!oldValue) {
+          return res;
+        }
         const newValue = { ...oldValue };
         newValue.list = [...oldValue?.list, ...res.list];
-        onDataChange(newValue);
         return newValue;
       });
     },
@@ -49,6 +50,10 @@ export const PaginationList: React.FC<PaginationListProps> = ({
   const handleFetchData = () => {
     getData({ ...pagination, ...params });
   };
+
+  useEffect(() => {
+    onDataChange(data);
+  }, [data]);
 
   // 第一次请求
   useDeepCompareEffect(() => {

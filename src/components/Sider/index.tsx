@@ -46,7 +46,7 @@ export const Sider = () => {
           split={<Divider style={{ margin: 0 }} />}
         >
           <div>
-            <div className={styles.title}>阅读前十排行</div>
+            <div className={styles.title}>热门文章</div>
             <LoadingContainer
               loading={getArticleRankingListLoading}
               empty={!articleRankingList || articleRankingList.length <= 0}
@@ -69,7 +69,7 @@ export const Sider = () => {
             </LoadingContainer>
           </div>
           <div>
-            <div className={styles.title}>作者创作排行</div>
+            <div className={styles.title}>活跃作者</div>
             <LoadingContainer
               loading={getAuthorRankingListLoading}
               empty={!authorRankingList || authorRankingList.length <= 0}
