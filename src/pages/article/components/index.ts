@@ -1,2 +1,2 @@
-export * from './Comments';
+export * from './ArticleComments';
 export * from './Feedback';

@@ -4,12 +4,12 @@ import {
   LoadingContainer,
   RichTextViewer,
 } from '@/components';
-import { useFetch, useFetchData } from '@/hooks';
+import { useFetch } from '@/hooks';
 import type { ArticleComment } from '@/types/article';
 import { formatTime } from '@/utils';
 import apis from '@/utils/apis';
 import { Avatar, Card, Divider, Space } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ModelMap, UserModelState } from 'umi';
 import { Link, useSelector } from 'umi';
 import ReplyDrawerInputer from './ArticleCommentReplyDrawerInputer';
@@ -34,11 +34,23 @@ export const ArticleCommentItem: React.FC<ArticleCommentItemProps> = ({
 
   const [showReply, setShowReply] = useState(false);
 
-  const [commentReplyList, getCommentReplyListLoading, getCommentReplyList] =
-    useFetchData(showReply && apis.getArticleCommentReplyList, {
-      params: { commentId: commentInfo.id },
-      defaultValues: [],
-    });
+  const [commentReplyList, setCommentReplyList] = useState([]);
+
+  const [getCommentReplyList, getCommentReplyListLoading] = useFetch(
+    showReply && apis.getArticleCommentReplyList,
+    {
+      params: {
+        commentId: commentInfo.id,
+      },
+      callback: setCommentReplyList,
+    },
+  );
+
+  useEffect(() => {
+    if (showReply) {
+      getCommentReplyList();
+    }
+  }, [showReply]);
 
   const [replyingComment, setReplyingComment] = useState<
     { id: number; to?: number | undefined; toName: string } | undefined
@@ -59,9 +71,7 @@ export const ArticleCommentItem: React.FC<ArticleCommentItemProps> = ({
     if (!showReply) {
       setShowReply(true);
     } else {
-      getCommentReplyList({
-        commentId: commentInfo.id,
-      });
+      getCommentReplyList();
     }
     onReply(commentInfo.id);
   };

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useDeepCompareCallback } from 'use-deep-compare';
 
 export interface UseFetchOptions<T> {
-  defaultParams?: Record<string, any> | FormData | undefined;
+  params?: Record<string, any> | FormData | undefined;
   callback?: (resData: T) => any;
   requestOptions?: ResponseOptions;
 }
@@ -24,7 +24,7 @@ export const useFetch = <T = any,>(
       try {
         const resData = await request(
           api,
-          newParams || options?.defaultParams,
+          newParams || options?.params,
           options?.requestOptions,
         );
         if (options?.callback) options.callback(resData);

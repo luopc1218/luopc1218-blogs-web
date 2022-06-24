@@ -36,6 +36,7 @@ export const useFetchData = <T = any,>(
     },
     [options],
   );
+
   useDeepCompareEffect(() => {
     if (api) {
       handleGetData(options?.params);

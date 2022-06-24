@@ -1,6 +1,5 @@
 import { ColumnSpace, RichTextEditor } from '@/components';
-import type { DrawerProps } from 'antd';
-import { Button, Drawer } from 'antd';
+import { Button, Drawer, DrawerProps } from 'antd';
 import { useState } from 'react';
 
 export interface ReplyDrawerInputerProps {
