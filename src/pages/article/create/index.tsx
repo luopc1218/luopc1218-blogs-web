@@ -1,4 +1,9 @@
-import { ColumnSpace, LoadingContainer, RichTextEditor } from '@/components';
+import {
+  ColumnSpace,
+  LoadingContainer,
+  RemoteSelect,
+  RichTextEditor,
+} from '@/components';
 import { useFetch, useFetchData, usePage, useUrlParams } from '@/hooks';
 import apis from '@/utils/apis';
 import { Button, Form, Input } from 'antd';
@@ -37,6 +42,7 @@ export const ArticleCreatePage: React.FC<ArticleCreatePageProps> = ({}) => {
         description: articleInfo.description,
         tags: articleInfo.tags,
         content: articleInfo.content,
+        type: articleInfo.type,
       });
     }
   }, [articleInfo, form]);
@@ -87,7 +93,12 @@ export const ArticleCreatePage: React.FC<ArticleCreatePageProps> = ({}) => {
           form={form}
           onFinish={editMode ? handleSaveCreateArticle : handleCreateArticle}
           initialValues={{
+            title: '',
+            description: '',
+            tags: [],
             newTags: [],
+            type: undefined,
+            content: '',
           }}
         >
           <Form.Item name="title" label="标题" rules={[{ required: true }]}>
@@ -99,6 +110,13 @@ export const ArticleCreatePage: React.FC<ArticleCreatePageProps> = ({}) => {
             rules={[{ required: true }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item name="type" label="类型" rules={[{ required: true }]}>
+            <RemoteSelect
+              api={apis.getArticleTypeList}
+              fieldNames={{ label: 'name', value: 'id' }}
+              placeholder="请选择类型"
+            />
           </Form.Item>
           <Form.Item
             label="标签"
