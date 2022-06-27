@@ -1,34 +1,42 @@
 import { useFetch, usePagination } from '@/hooks';
 import type { ListResponse } from '@/types/response';
 import type { Api } from '@/utils/apis';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDeepCompareEffect } from 'use-deep-compare';
 import LoadingContainer from '../LoadingContainer';
 
 export interface PaginationListProps {
   api: Api;
   params?: any;
-  onDataChange?: (data: any) => void;
-  render?: (
-    data: any,
-    setData: React.Dispatch<
-      React.SetStateAction<ListResponse<any> | undefined>
-    >,
+  render: (
+    data: ListResponse,
+    setData: React.Dispatch<React.SetStateAction<ListResponse<any>>>,
   ) => JSX.Element;
 }
 
-export const PaginationList: React.FC<PaginationListProps> = ({
-  api,
-  params = {},
-  onDataChange = () => null,
-  render = () => null,
-  children,
-}) => {
+export interface PaginationListImperative {
+  refresh: (newParams: any) => void;
+}
+
+export const PaginationList = forwardRef<
+  PaginationListImperative,
+  PaginationListProps
+>(({ api, params = {}, render, children }, ref) => {
   const listRef = useRef<HTMLDivElement>(null);
 
   const [pagination, setPagination] = usePagination();
 
-  const [data, setData] = useState<ListResponse | undefined>(undefined);
+  const [data, setData] = useState<ListResponse>({
+    list: [],
+    totalCount: 0,
+  });
 
   const noMoreData = useMemo(() => {
     return data && data.list.length >= data.totalCount;
@@ -37,43 +45,42 @@ export const PaginationList: React.FC<PaginationListProps> = ({
   const [getData, getDataLoading] = useFetch(api, {
     callback(res) {
       setData((oldValue) => {
-        if (!oldValue) {
-          return res;
-        }
         const newValue = { ...oldValue };
         newValue.list = [...oldValue?.list, ...res.list];
+        newValue.totalCount = res.totalCount;
         return newValue;
       });
     },
   });
 
-  const handleFetchData = () => {
-    getData({ ...pagination, ...params });
+  const handleFetchData = (newParams = {}) => {
+    getData({ ...pagination, ...params, ...newParams });
   };
 
-  useEffect(() => {
-    onDataChange(data);
-  }, [data]);
+  const handleRefresh = (newParams = {}) => {
+    setData({
+      list: [],
+      totalCount: 0,
+    });
+    if (pagination.page !== 1) {
+      setPagination(1);
+      handleFetchData(newParams);
+    } else {
+      handleFetchData(newParams);
+    }
+  };
 
   // 第一次请求
   useDeepCompareEffect(() => {
-    if (pagination.page !== 1) {
-      setPagination(1);
-    }
-    setData(undefined);
-    handleFetchData();
+    handleRefresh();
   }, [params]);
-
-  // 后续请求
-  useDeepCompareEffect(() => {
-    if (pagination.page !== 1) {
-      handleFetchData();
-    }
-  }, [pagination]);
 
   const handleTouchGround = () => {
     if (!noMoreData) {
       setPagination(pagination.page + 1);
+      handleFetchData({
+        page: pagination.page + 1,
+      });
     }
   };
 
@@ -98,6 +105,12 @@ export const PaginationList: React.FC<PaginationListProps> = ({
     };
   }, [getDataLoading]);
 
+  useImperativeHandle(ref, () => {
+    return {
+      refresh: handleRefresh,
+    };
+  });
+
   return (
     <LoadingContainer
       loading={getDataLoading}
@@ -110,5 +123,5 @@ export const PaginationList: React.FC<PaginationListProps> = ({
       </div>
     </LoadingContainer>
   );
-};
+});
 export default PaginationList;
