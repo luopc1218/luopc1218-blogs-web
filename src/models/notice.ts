@@ -1,23 +1,27 @@
 import { noticeService } from '@/services/notice';
+import type { Notice } from '@/types/notice';
 import type { Model } from './index';
 
 export interface NoticeModelState {
   noticeDrawerVisible: boolean;
-  unreadNoticeCount: number;
+  notice: {
+    list: Notice[];
+    unReadCount: number;
+  };
 }
 
 export const NoticeModel: Model<NoticeModelState> = {
   namespace: 'notice',
   state: {
     noticeDrawerVisible: false,
-    unreadNoticeCount: 0,
+    notice: { list: [], unReadCount: 0 },
   },
   reducers: {
     setNoticeDrawerVisible(state, { payload }) {
       state.noticeDrawerVisible = payload;
     },
-    setUnreadNoticeCount(state, { payload }) {
-      state.unreadNoticeCount = payload;
+    setNotice(state, { payload }) {
+      state.notice = payload;
     },
   },
   effects: {
@@ -33,19 +37,14 @@ export const NoticeModel: Model<NoticeModelState> = {
         payload: false,
       });
     },
-    *getUnreadNoticeCount({}, { put }) {
+    *getNotice({}, { put }) {
       try {
-        const unreadNoticeCount = yield noticeService.getUnreadNoticeCount();
+        const notice = yield noticeService.getNotice();
         yield put({
-          type: 'setUnreadNoticeCount',
-          payload: unreadNoticeCount,
+          type: 'setNotice',
+          payload: notice,
         });
-      } catch (error) {
-        yield put({
-          type: 'setUnreadNoticeCount',
-          payload: 0,
-        });
-      }
+      } catch (error) {}
     },
   },
 };

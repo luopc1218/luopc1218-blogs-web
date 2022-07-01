@@ -120,7 +120,7 @@ const HeaderUser: React.FC = () => {
     <div className={styles.headerUser}>
       <Space align="center">
         <Badge
-          count={noticeModelState.unreadNoticeCount}
+          count={noticeModelState.notice.unReadCount}
           className={styles.notice}
         >
           <Iconfont

@@ -3,6 +3,6 @@ export interface Notice {
   from: number;
   to: number;
   content: string;
-  read: boolean;
+  isRead: boolean;
   createTime: Date;
 }
