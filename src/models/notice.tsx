@@ -37,9 +37,9 @@ export const NoticeModel: Model<NoticeModelState> = {
         payload: false,
       });
     },
-    *getNotice({}, { put }) {
+    *getNoticeList({}, { put }) {
       try {
-        const notice = yield noticeService.getNotice();
+        const notice = yield noticeService.getNoticeList();
         yield put({
           type: 'setNotice',
           payload: notice,

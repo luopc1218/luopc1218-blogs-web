@@ -123,8 +123,16 @@ export const apis: Record<string, Api> = {
     url: '/api/article/cancelArticleCollect',
     method: 'POST',
   },
-  getNotice: {
-    url: '/api/notice/getNotice',
+  getNoticeList: {
+    url: '/api/notice/getNoticeList',
+    method: 'GET',
+  },
+  getNoticeById: {
+    url: '/api/notice/getNoticeById',
+    method: 'GET',
+  },
+  readNotice: {
+    url: '/api/notice/readNotice',
     method: 'GET',
   },
 };

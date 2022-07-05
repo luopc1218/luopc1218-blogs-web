@@ -1,6 +1,14 @@
 import { Breadcrumb, Footer, Header, NoticeDrawer, Sider } from '@/components';
-import { Affix, ConfigProvider, Layout, Modal } from 'antd';
+import {
+  Affix,
+  ConfigProvider,
+  Layout,
+  Modal,
+  notification as AntdNotification,
+} from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
+import type { ModalStaticFunctions } from 'antd/lib/modal/confirm';
+import { NotificationApi } from 'antd/lib/notification';
 import 'quill/dist/quill.snow.css';
 import React, { useEffect, useMemo } from 'react';
 import type { GlobalModelState, ModelMap } from 'umi';
@@ -9,23 +17,28 @@ import styles from './index.less';
 
 declare global {
   interface Window {
-    modal: any;
+    modal: Omit<ModalStaticFunctions, 'warn'>;
+    notification: NotificationApi;
   }
 }
 
 export const LayoutContainer: React.FC = ({ children }) => {
   const dispatch = useDispatch();
-  const [modal, contextHolder] = Modal.useModal();
+  const [modal, modalContextHolder] = Modal.useModal();
+  const [notification, notificationContextHolder] =
+    AntdNotification.useNotification();
+
   const globalModelState: GlobalModelState = useSelector(
     (state: ModelMap) => state.global,
   );
 
   useEffect(() => {
     window.modal = modal;
+    window.notification = notification;
     dispatch({
       type: 'user/checkSignIn',
     });
-  }, [modal]);
+  }, [modal, notification]);
 
   ConfigProvider.config({
     theme: {
@@ -61,7 +74,8 @@ export const LayoutContainer: React.FC = ({ children }) => {
         <Footer />
       </Layout>
 
-      {contextHolder}
+      {modalContextHolder}
+      {notificationContextHolder}
       <NoticeDrawer />
     </ConfigProvider>
   );

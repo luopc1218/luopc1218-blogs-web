@@ -10,6 +10,7 @@ export * from './Header';
 export * from './Iconfont';
 export * from './LoadingContainer';
 export * from './NoticeDrawer';
+export * from './NoticeViewer';
 export * from './PaginationList';
 export * from './RemoteQueryForm';
 export * from './RemoteSelect';

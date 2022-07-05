@@ -27,17 +27,10 @@ export const userModel: Model<UserModelState> = {
     },
   },
   effects: {
-    *signIn({ payload }, { put }) {
-      const { signInFormData, reslove, reject } = payload;
+    *signIn({ payload }) {
+      const { signInFormData, reject } = payload;
       try {
         yield UserService.signIn(signInFormData);
-        // reslove();
-        // yield put({
-        //   type: 'checkSignIn',
-        //   payload: {
-        //     accessToken,
-        //   },
-        // });
       } catch (e) {
         reject();
       }
