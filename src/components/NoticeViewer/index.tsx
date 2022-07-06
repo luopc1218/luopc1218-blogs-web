@@ -16,6 +16,11 @@ export interface NoticeViewerProps {
 export const NoticeViewer: React.FC<NoticeViewerProps> = ({ noticeId }) => {
   const [noticeInfo, getNoticeInfoLoading] = useFetchData<Notice>(
     apis.getNoticeById,
+    {
+      params: {
+        noticeId,
+      },
+    },
   );
 
   const dispatch = useDispatch();
@@ -25,6 +30,8 @@ export const NoticeViewer: React.FC<NoticeViewerProps> = ({ noticeId }) => {
   useEffect(() => {
     if (noticeInfo && !noticeInfo.isRead) {
       readNotice({ noticeId: noticeId }).then((res) => {
+        console.log(res);
+
         if (res) {
           dispatch({ type: 'notice/getNoticeList' });
         }

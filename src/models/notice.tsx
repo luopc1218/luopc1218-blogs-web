@@ -8,6 +8,7 @@ export interface NoticeModelState {
     list: Notice[];
     unReadCount: number;
   };
+  getNoticeLoading: boolean;
 }
 
 export const NoticeModel: Model<NoticeModelState> = {
@@ -15,6 +16,7 @@ export const NoticeModel: Model<NoticeModelState> = {
   state: {
     noticeDrawerVisible: false,
     notice: { list: [], unReadCount: 0 },
+    getNoticeLoading: false,
   },
   reducers: {
     setNoticeDrawerVisible(state, { payload }) {
@@ -22,6 +24,9 @@ export const NoticeModel: Model<NoticeModelState> = {
     },
     setNotice(state, { payload }) {
       state.notice = payload;
+    },
+    setGetNoticeLoading(state, { payload }) {
+      state.getNoticeLoading = payload;
     },
   },
   effects: {
@@ -39,12 +44,17 @@ export const NoticeModel: Model<NoticeModelState> = {
     },
     *getNoticeList({}, { put }) {
       try {
+        yield put({ type: 'setGetNoticeLoading', payload: true });
         const notice = yield noticeService.getNoticeList();
+
         yield put({
           type: 'setNotice',
           payload: notice,
         });
-      } catch (error) {}
+        yield put({ type: 'setGetNoticeLoading', payload: false });
+      } catch (error) {
+        yield put({ type: 'setGetNoticeLoading', payload: false });
+      }
     },
   },
 };

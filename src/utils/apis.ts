@@ -133,7 +133,7 @@ export const apis: Record<string, Api> = {
   },
   readNotice: {
     url: '/api/notice/readNotice',
-    method: 'GET',
+    method: 'POST',
   },
 };
 

@@ -81,7 +81,7 @@ export const NoticeDrawer: React.FC = () => {
       title="消息中心"
     >
       <LoadingContainer
-        loading={false}
+        loading={noticeModelState.getNoticeLoading}
         empty={noticeModelState.notice.list.length <= 0}
         className={styles.noticeDrawer}
       >
